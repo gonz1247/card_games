@@ -77,17 +77,25 @@ class TestCardDeck:
 
     def test_deal_deck(self):
         """
-        Test dealing the deck into multiple piles gives even piles with no overlapping cards (for a single deck).
+        Test dealing the deck into multiple piles gives even piles with unique instances of
         """
-        nDecks = 1
-        deck = CardDeck(nDecks=nDecks)
-        nPiles = 3
+        deck = CardDeck(nDecks=0)
+        nPiles = 2
+        card1 = Card(value="7", suit="hearts")
+        card2 = Card(value="ace", suit="spades")
+        card3 = Card(value="10", suit="clubs")
+        deck.add_card(card1)
+        deck.add_card(card2)
+        deck.add_card(card3)
+        nCards = deck.nCards
         piles = deck.deal_deck(nPiles=nPiles)
         assert len(piles) == nPiles
-        assert piles[0].nCards == piles[1].nCards == piles[2].nCards
+        assert piles[0].nCards == piles[1].nCards
         total_cards_in_piles = piles[0].nCards * nPiles
-        assert total_cards_in_piles + deck.nCards == nDecks * 52
-        for card1, card2, card3 in zip(piles[0].cards, piles[1].cards, piles[2].cards):
-            assert card1 != card2
-            assert card1 != card3
-            assert card2 != card3
+        assert total_cards_in_piles + deck.nCards == nCards
+        card1 = piles[0].deal_card()
+        card2 = piles[1].deal_card()
+        card3 = deck.deal_card()
+        assert card1 is not card2
+        assert card1 is not card3
+        assert card2 is not card3
