@@ -45,7 +45,9 @@ class TestCard:
         card1 = Card(value="10", suit="diamonds")
         card2 = Card(value="3", suit="diamonds")
         card3 = Card(value="10", suit="hearts")
+        # check that suits matching returns True
         assert card1.sameSuit(card2)
+        # check that suits not matching returns False, regardless of value
         assert not card1.sameSuit(card3)
 
     def test_same_value(self):
@@ -55,7 +57,9 @@ class TestCard:
         card1 = Card(value="jack", suit="clubs")
         card2 = Card(value="jack", suit="spades")
         card3 = Card(value="7", suit="clubs")
+        # check that values matching returns True
         assert card1.sameValue(card2)
+        # check that values not matching returns False, regardless of suit
         assert not card1.sameValue(card3)
 
     def test_card_equality_invalid_cards(self):
