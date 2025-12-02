@@ -29,56 +29,64 @@ class TestCardDeck:
         """
         Test dealing a card from the bottom of the deck removes the expected card from the deck.
         """
+        # setup deck and check which card is at the bottom
         deck = CardDeck()
         initial_nCards = deck.nCards
-        expected_card_suit = deck.cards[0].suit
-        expected_card_value = deck.cards[0].value
+        expected_card = deck.cards[0]
+        # deal card from bottom
         card = deck.deal_card(fromBottom=True)
+        # check that card was removed from deck
         assert isinstance(card, Card)
         assert deck.nCards == initial_nCards - 1
-        assert card.suit == expected_card_suit
-        assert card.value == expected_card_value
+        # check that card dealt is explicitly the one expected
+        assert card is expected_card
 
     def test_deal_card_from_top(self):
         """
         Test dealing a card from the top of the deck removes the expected card from the deck.
         """
+        # setup deck and check which card is at the top
         deck = CardDeck()
         initial_nCards = deck.nCards
-        expected_card_suit = deck.cards[-1].suit
-        expected_card_value = deck.cards[-1].value
+        expected_card = deck.cards[-1]
+        # deal card from top
         card = deck.deal_card(fromBottom=False)
         assert isinstance(card, Card)
         assert deck.nCards == initial_nCards - 1
-        assert card.suit == expected_card_suit
-        assert card.value == expected_card_value
+        # check that card dealt is explicitly the one expected
+        assert card is expected_card
 
     def test_add_card_on_top(self):
         """
         Test adding a card on top of the deck.
         """
+        # setup deck and add card
         deck = CardDeck()
         card = Card(value="5", suit="diamonds")
         initial_nCards = deck.nCards
         deck.add_card(card, onTop=True)
         assert deck.nCards == initial_nCards + 1
-        assert deck.cards[-1] == card
+        # check that card on the top is explicitly the one added
+        assert deck.cards[-1] is card
 
     def test_add_card_on_bottom(self):
         """
         Test adding a card on bottom of the deck.
         """
+        # setup deck and add card
         deck = CardDeck()
         card = Card(value="king", suit="clubs")
         initial_nCards = deck.nCards
         deck.add_card(card, onTop=False)
         assert deck.nCards == initial_nCards + 1
-        assert deck.cards[0] == card
+        # check that card on the bottom is explicitly the one added
+        assert deck.cards[0] is card
 
     def test_deal_deck(self):
         """
         Test dealing the deck into multiple piles gives even piles with unique instances of
         """
+        # create deck of 3 unique instances of cards so that splitting into 2 piles leaves a card in the deck
         deck = CardDeck(nDecks=0)
         nPiles = 2
         card1 = Card(value="7", suit="hearts")
@@ -88,11 +96,13 @@ class TestCardDeck:
         deck.add_card(card2)
         deck.add_card(card3)
         nCards = deck.nCards
+        # Split deck into piles and check that piles and deck all have correct number of cards
         piles = deck.deal_deck(nPiles=nPiles)
         assert len(piles) == nPiles
         assert piles[0].nCards == piles[1].nCards
         total_cards_in_piles = piles[0].nCards * nPiles
         assert total_cards_in_piles + deck.nCards == nCards
+        # Check that all cards in piles and deck are unique instances
         card1 = piles[0].deal_card()
         card2 = piles[1].deal_card()
         card3 = deck.deal_card()
