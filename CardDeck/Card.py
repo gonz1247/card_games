@@ -66,3 +66,35 @@ class Card:
         if suit.lower() not in self._valid_suits:
             raise ValueError("Invalid card suit")
         self._suit = suit.lower()
+
+    def sameSuit(self, card2: "Card") -> bool:
+        """
+        Checks if two Card objects have the same suit.
+        """
+        return self.suit == card2.suit
+
+    def sameValue(self, card2: "Card") -> bool:
+        """
+        Checks if two Card objects have the same value.
+        """
+        return self.value == card2.value
+
+    def __eq__(self, card2: "Card") -> bool:
+        """
+        Checks if two Card objects are equal based on their value and suit.
+        """
+        if not isinstance(card2, Card):
+            return False
+        return (self.value == card2.value) and (self.suit == card2.suit)
+
+    def __repr__(self) -> str:
+        """
+        Returns a string representation of the card.
+        """
+        return f"Card(value='{self.value}', suit='{self.suit}')"
+
+    def __str__(self) -> str:
+        """
+        Returns a user-friendly string representation of the card.
+        """
+        return f"{self.value.capitalize()} of {self.suit.capitalize()}"

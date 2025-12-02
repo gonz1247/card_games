@@ -37,3 +37,54 @@ class TestCard:
         """
         with pytest.raises(ValueError):
             Card("8", "stars")
+
+    def test_same_suit(self):
+        """
+        Test that comparison between suits of cards works as expected.
+        """
+        card1 = Card(value="10", suit="diamonds")
+        card2 = Card(value="3", suit="diamonds")
+        card3 = Card(value="10", suit="hearts")
+        assert card1.sameSuit(card2)
+        assert not card1.sameSuit(card3)
+
+    def test_same_value(self):
+        """
+        Test that comparison between values of cards works as expected.
+        """
+        card1 = Card(value="jack", suit="clubs")
+        card2 = Card(value="jack", suit="spades")
+        card3 = Card(value="7", suit="clubs")
+        assert card1.sameValue(card2)
+        assert not card1.sameValue(card3)
+
+    def test_card_equality_invalid_cards(self):
+        """
+        Test equality comparison between a card and a different type returns False.
+        """
+        card = Card(value="3", suit="diamonds")
+        assert not card == "not_a_card"
+
+    def test_card_equality_valid_cards(self):
+        """
+        Test equality comparison between two valid cards.
+        """
+        card1 = Card(value="2", suit="spades")
+        card2 = Card(value="2", suit="spades")
+        card3 = Card(value="king", suit="clubs")
+        assert card1 == card2
+        assert card1 != card3
+
+    def test_str(self):
+        """
+        Test the string representation of a card.
+        """
+        card = Card(value="ace", suit="diamonds")
+        assert card.__str__() == "Ace of Diamonds"
+
+    def test_repr(self):
+        """
+        Test the repr representation of a card.
+        """
+        card = Card(value="ace", suit="diamonds")
+        assert card.__repr__() == "Card(value='ace', suit='diamonds')"
