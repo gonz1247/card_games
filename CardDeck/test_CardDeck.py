@@ -26,7 +26,7 @@ class TestCardDeck:
         deck.cards = cards
         for i in range(len(cards)):
             assert deck.cards[i] is cards[i]
-    
+
     def test_cards_getter_returns_copy(self):
         """
         Test that the cards getter returns a copy of the list of cards.
@@ -118,6 +118,55 @@ class TestCardDeck:
         assert deck.nCards == initial_nCards + 1
         # check that card on the bottom is explicitly the one added
         assert deck.cards[0] is card
+
+    def test_pull_card_invalid_index(self):
+        """
+        Test pulling a card with an invalid index raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(IndexError):
+            deck.pull_card(index=deck.nCards)
+
+    def test_pull_card_valid_index(self):
+        """
+        Test pulling a card with a valid index returns the expected card.
+        """
+        deck = CardDeck()
+        initial_nCards = deck.nCards
+        index = deck.nCards // 2
+        expected_card = deck.cards[index]
+        pulled_card = deck.pull_card(index=index)
+        assert pulled_card is expected_card
+        assert deck.nCards == initial_nCards - 1
+
+    def test_insert_card_invalid_type(self):
+        """
+        Test inserting an invalid type as a card raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(TypeError):
+            deck.insert_card(card="not_a_card", index=0)
+
+    def test_insert_card_invalid_index(self):
+        """
+        Test inserting a card at an invalid index raises an error.
+        """
+        deck = CardDeck()
+        card = Card(value="9", suit="diamonds")
+        with pytest.raises(IndexError):
+            deck.insert_card(card=card, index=-1)
+
+    def test_insert_card_valid(self):
+        """
+        Test inserting a card at a valid index works as expected.
+        """
+        deck = CardDeck()
+        card = Card(value="jack", suit="spades")
+        index = deck.nCards // 2
+        initial_nCards = deck.nCards
+        deck.insert_card(card=card, index=index)
+        assert deck.nCards == initial_nCards + 1
+        assert deck.cards[index] is card
 
     def test_combine_decks_invalid_type(self):
         """

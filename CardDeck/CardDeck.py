@@ -78,6 +78,40 @@ class CardDeck:
         else:
             self._cards.insert(0, card)
 
+    def pull_card(self, index: int) -> Card:
+        """
+        Pulls a card at the specified index out of the deck.
+
+        Parameters
+        ----------
+        index: int
+            The index of the card to retrieve.
+
+        Returns
+        ----------
+        Card object at the specified index.
+        """
+        if index < 0 or index >= len(self._cards):
+            raise IndexError("Card index out of range")
+        return self._cards.pop(index)
+
+    def insert_card(self, card: Card, index: int) -> None:
+        """
+        Inserts a card at the specified index in the deck.
+
+        Parameters
+        ----------
+        card: Card
+            The card to be inserted.
+        index: int
+            The index at which to insert the card.
+        """
+        if isinstance(card, Card) is False:
+            raise TypeError("Only Card instances can be added to the deck")
+        if index < 0 or index > len(self._cards):
+            raise IndexError("Card index out of range")
+        self._cards.insert(index, card)
+
     def combine_decks(self, other_deck: "CardDeck", onTop=False) -> None:
         """
         Adds another CardDeck to the current deck.
