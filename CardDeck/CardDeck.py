@@ -16,7 +16,7 @@ class CardDeck:
         nDecks: int, optional
             The number of decks to include (default: 1)
         """
-        self.cards = []
+        self._cards = []
         suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
         values = [
             "2",
@@ -36,14 +36,14 @@ class CardDeck:
         for _ in range(nDecks):
             for suit in suits:
                 for value in values:
-                    self.cards.append(Card(value, suit))
+                    self.add_card(Card(value, suit), onTop=True)
         self.shuffle()
 
     def shuffle(self) -> None:
         """
         Shuffles the deck of cards.
         """
-        random.shuffle(self.cards)
+        random.shuffle(self._cards)
 
     def deal_card(self, fromBottom=False) -> Card:
         """
@@ -53,11 +53,12 @@ class CardDeck:
         -------
         Card object if available.
         """
-        if len(self.cards) == 0:
+        if len(self._cards) == 0:
             raise IndexError("No cards left in the deck")
         if fromBottom:
-            return self.cards.pop(0)
-        return self.cards.pop()
+            return self._cards.pop(0)
+        else:
+            return self._cards.pop()
 
     def add_card(self, card: Card, onTop=False) -> None:
         """
@@ -73,9 +74,9 @@ class CardDeck:
         if isinstance(card, Card) is False:
             raise TypeError("Only Card instances can be added to the deck")
         if onTop:
-            self.cards.append(card)
+            self._cards.append(card)
         else:
-            self.cards.insert(0, card)
+            self._cards.insert(0, card)
 
     def combine_decks(self, other_deck: "CardDeck", onTop=False) -> None:
         """
@@ -89,9 +90,9 @@ class CardDeck:
         if isinstance(other_deck, CardDeck) is False:
             raise TypeError("Only CardDeck instances can be added to the deck")
         if onTop:
-            self.cards = self.cards + other_deck.cards
+            self._cards = self._cards + other_deck._cards
         else:
-            self.cards = other_deck.cards + self.cards
+            self._cards = other_deck._cards + self._cards
 
     def deal_deck(self, nPiles: int) -> list["CardDeck"]:
         """
@@ -108,8 +109,8 @@ class CardDeck:
         """
         self.shuffle()
         piles = [CardDeck(nDecks=0) for _ in range(nPiles)]
-        leftover = len(self.cards) % nPiles
-        while len(self.cards) > leftover:
+        leftover = len(self._cards) % nPiles
+        while len(self._cards) > leftover:
             for pile in piles:
                 pile.add_card(self.deal_card(), onTop=True)
         return piles
@@ -119,4 +120,22 @@ class CardDeck:
         """
         Returns the current number of cards in the deck.
         """
-        return len(self.cards)
+        return len(self._cards)
+
+    @property
+    def cards(self) -> list[Card]:
+        """
+        Returns the list of cards in the deck.
+        """
+        # return copy of list of cards
+        return self._cards[:]
+
+    @cards.setter
+    def cards(self, cards: list[Card]) -> None:
+        """
+        Sets the list of cards in the deck.
+        """
+        if isinstance(cards, list) is False:
+            raise TypeError("cards must be a list of Card instances")
+        for card in cards:
+            self.add_card(card, onTop=True)
