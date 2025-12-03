@@ -173,3 +173,16 @@ class CardDeck:
             raise TypeError("cards must be a list of Card instances")
         for card in cards:
             self.add_card(card, onTop=True)
+
+    def __repr__(self) -> str:
+        """
+        Returns a string representation of the CardDeck.
+        """
+        return f"CardDeck(nCards={self.nCards})"
+
+    def __str__(self) -> str:
+        """
+        Returns a detailed string representation of the CardDeck.
+        """
+        card_list = ", ".join([card.__str__() for card in self._cards])
+        return f"CardDeck with {self.nCards} cards: [{card_list}]"

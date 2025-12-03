@@ -231,3 +231,26 @@ class TestCardDeck:
         assert card1 is not card2
         assert card1 is not card3
         assert card2 is not card3
+
+    def test_str(self):
+        """
+        Test the __str__ method of the CardDeck class.
+        """
+        deck = CardDeck(nDecks=0)
+        card1 = Card(value="5", suit="hearts")
+        card2 = Card(value="7", suit="diamonds")
+        deck.add_card(card1, onTop=True)
+        deck.add_card(card2, onTop=True)
+        str_repr = deck.__str__()
+        assert (
+            str_repr
+            == f"CardDeck with {deck.nCards} cards: [{card1.__repr__()}, {card2.__repr__()}]"
+        )
+
+    def test_repr(self):
+        """
+        Test the __repr__ method of the CardDeck class.
+        """
+        deck = CardDeck(nDecks=1)
+        repr_str = deck.__repr__()
+        assert repr_str == f"CardDeck(nCards={deck.nCards})"
