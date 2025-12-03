@@ -9,6 +9,35 @@ class TestCardDeck:
     Test functionality of the CardDeck class.
     """
 
+    def test_cards_setter_invalid_type(self):
+        """
+        Test setting cards to an invalid type raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(TypeError):
+            deck.cards = "not_a_list"
+
+    def test_cards_setter_valid_cards(self):
+        """
+        Test setting cards to a list of cards works as expected.
+        """
+        deck = CardDeck(nDecks=0)
+        cards = [Card(value="2", suit="hearts"), Card(value="3", suit="diamonds")]
+        deck.cards = cards
+        for i in range(len(cards)):
+            assert deck.cards[i] is cards[i]
+    
+    def test_cards_getter_returns_copy(self):
+        """
+        Test that the cards getter returns a copy of the list of cards.
+        """
+        deck = CardDeck()
+        cards_copy = deck.cards
+        # modify the returned list
+        cards_copy.append(Card(value="4", suit="clubs"))
+        # check that original deck's cards list is unchanged
+        assert deck.nCards != len(cards_copy)
+
     def test_unique_deck(self):
         """
         Test that a single deck contains 52 unique cards.
