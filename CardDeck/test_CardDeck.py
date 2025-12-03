@@ -56,6 +56,14 @@ class TestCardDeck:
         # check that card dealt is explicitly the one expected
         assert card is expected_card
 
+    def test_add_card_invalid_type(self):
+        """
+        Test adding an invalid type as a card raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(TypeError):
+            deck.add_card(card="not_a_card")
+
     def test_add_card_on_top(self):
         """
         Test adding a card on top of the deck.
@@ -81,6 +89,42 @@ class TestCardDeck:
         assert deck.nCards == initial_nCards + 1
         # check that card on the bottom is explicitly the one added
         assert deck.cards[0] is card
+
+    def test_combine_decks_invalid_type(self):
+        """
+        Test combining an invalid type as a deck raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(TypeError):
+            deck.combine_decks(other_deck="not_a_deck")
+
+    def test_combine_decks_on_top(self):
+        """
+        Test combining two decks.
+        """
+        # setup decks and combine
+        deck1 = CardDeck(nDecks=1)
+        deck2 = CardDeck(nDecks=2)
+        initial_nCards_deck1 = deck1.nCards
+        deck1.combine_decks(other_deck=deck2, onTop=True)
+        assert deck1.nCards == initial_nCards_deck1 + deck2.nCards
+        # check that cards from deck2 are at the top of deck1
+        for i in range(deck2.nCards):
+            assert deck1.cards[initial_nCards_deck1 + i] is deck2.cards[i]
+
+    def test_combine_decks_on_bottom(self):
+        """
+        Test combining two decks.
+        """
+        # setup decks and combine
+        deck1 = CardDeck(nDecks=1)
+        deck2 = CardDeck(nDecks=2)
+        initial_nCards_deck1 = deck1.nCards
+        deck1.combine_decks(other_deck=deck2, onTop=False)
+        assert deck1.nCards == initial_nCards_deck1 + deck2.nCards
+        # check that cards from deck2 are at the bottom of deck1
+        for i in range(deck2.nCards):
+            assert deck1.cards[i] is deck2.cards[i]
 
     def test_deal_deck(self):
         """

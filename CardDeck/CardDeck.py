@@ -70,10 +70,28 @@ class CardDeck:
         onTop: bool, optional
             If True, adds the card to the top of the deck; otherwise, adds it to the bottom (default: False)
         """
+        if isinstance(card, Card) is False:
+            raise TypeError("Only Card instances can be added to the deck")
         if onTop:
             self.cards.append(card)
         else:
             self.cards.insert(0, card)
+
+    def combine_decks(self, other_deck: "CardDeck", onTop=False) -> None:
+        """
+        Adds another CardDeck to the current deck.
+
+        Parameters
+        ----------
+        other_deck: CardDeck
+            The CardDeck to be added to the current deck.
+        """
+        if isinstance(other_deck, CardDeck) is False:
+            raise TypeError("Only CardDeck instances can be added to the deck")
+        if onTop:
+            self.cards = self.cards + other_deck.cards
+        else:
+            self.cards = other_deck.cards + self.cards
 
     def deal_deck(self, nPiles: int) -> list["CardDeck"]:
         """
