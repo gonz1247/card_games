@@ -244,7 +244,7 @@ class TestCardDeck:
         str_repr = deck.__str__()
         assert (
             str_repr
-            == f"CardDeck with {deck.nCards} cards: [{card1.__repr__()}, {card2.__repr__()}]"
+            == f"CardDeck with {deck.nCards} cards: [{card1.__str__()}, {card2.__str__()}]"
         )
 
     def test_repr(self):
