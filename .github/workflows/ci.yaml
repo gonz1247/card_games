@@ -1,4 +1,4 @@
-name: Python Tests
+name: CI Process
 
 on:
   pull_request:
@@ -20,12 +20,22 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Run linting
+        uses: super-linter/super-linter@v8.3.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: main
+          VALIDATE_PYTHON_RUFF: true
+          VALIDATE_PYTHON_BLACK: true
       - name: Run tests and generate coverage report
         run: python -m pytest --cov --cov-branch --cov-report=xml:coverage.xml --junitxml=pytest.xml
       - name: Add Coverage Report As Comment To Pull Request
