@@ -85,6 +85,28 @@ class TestCardDeck:
         # check that card dealt is explicitly the one expected
         assert card is expected_card
 
+    def test_see_card_invalid_index(self):
+        """
+        Test seeing a card with an invalid index raises an error.
+        """
+        deck = CardDeck()
+        with pytest.raises(IndexError):
+            deck.see_card(index=deck.nCards)
+
+    def test_see_card_valid_index(self):
+        """
+        Test seeing a card with a valid index returns a copy of the expected card.
+        """
+        deck = CardDeck(nDecks=0)
+        expected_card = Card(value="10", suit="spades")
+        deck.add_card(expected_card)
+        seen_card = deck.see_card(index=0)
+        assert isinstance(seen_card, Card)
+        # check that seen card is equal in value and suit to expected card
+        assert seen_card == expected_card
+        # check that seen card is a different instance than the one in the deck
+        assert seen_card is not expected_card
+
     def test_add_card_invalid_type(self):
         """
         Test adding an invalid type as a card raises an error.

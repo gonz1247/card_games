@@ -79,6 +79,12 @@ class Card:
         """
         return self.value == card2.value
 
+    def isFaceCard(self) -> bool:
+        """
+        Checks if the card is a face card (jack, queen, king, ace).
+        """
+        return self.value in {"jack", "queen", "king", "ace"}
+
     def __eq__(self, card2: "Card") -> bool:
         """
         Checks if two Card objects are equal based on their value and suit.
