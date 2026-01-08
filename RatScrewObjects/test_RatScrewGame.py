@@ -91,12 +91,14 @@ class TestRatScrewGame:
         # Initially, there should be no winner
         assert game.check_for_winner() is None
 
-        # Give all cards to player 1 and check for winner
-        game.players[0].card_stack = CardDeck(nDecks=1)
-        for p_idx in range(1, n_players):
-            game.players[p_idx].card_stack = CardDeck(nDecks=0)
-
-        assert game.check_for_winner() == 0
+        # Give all cards to player 0 and check for winner
+        winner_player_idx = 0
+        for p_idx in range(n_players):
+            if p_idx == winner_player_idx:
+                game.players[p_idx].card_stack = CardDeck(nDecks=1)
+            else:
+                game.players[p_idx].card_stack = CardDeck(nDecks=0)
+        assert game.check_for_winner() == winner_player_idx
 
     def test_play_game(self, monkeypatch):
         """
