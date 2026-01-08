@@ -62,6 +62,15 @@ class TestCard:
         # check that values not matching returns False, regardless of suit
         assert not card1.sameValue(card3)
 
+    def test_is_face_card(self):
+        """
+        Test that isFaceCard method works as expected.
+        """
+        face_card = Card(value="king", suit="hearts")
+        non_face_card = Card(value="9", suit="clubs")
+        assert face_card.isFaceCard() is True
+        assert non_face_card.isFaceCard() is False
+
     def test_card_equality_invalid_cards(self):
         """
         Test equality comparison between a card and a different type returns False.

@@ -112,6 +112,23 @@ class CardDeck:
             raise IndexError("Card index out of range")
         self._cards.insert(index, card)
 
+    def see_card(self, index: int) -> Card:
+        """
+        Returns copy of card at the specified index of the deck.
+
+        Parameters
+        ----------
+        index: int
+            The index of the card to view.
+
+        Returns
+        ----------
+        Card object at the specified index.
+        """
+        if index < 0 or index >= len(self._cards):
+            raise IndexError("Card index out of range")
+        return Card(self._cards[index].value, self._cards[index].suit)
+
     def combine_decks(self, other_deck: "CardDeck", onTop=False) -> None:
         """
         Adds another CardDeck to the current deck.
