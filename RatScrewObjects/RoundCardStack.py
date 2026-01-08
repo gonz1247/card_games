@@ -57,3 +57,25 @@ class RoundCardStack:
             return False
         return self.face_card_countdown < 1
 
+    def is_valid_slap(self) -> bool:
+        """
+        Determine if slapping current stack is valid
+
+        Returns
+        -------
+        Boolean indicating whether the stack is in a valid slap state
+        """
+        n_cards = self.played_card_stack.nCards
+        if n_cards < 2:
+            return False
+        top_card = self.played_card_stack.see_card(0)
+        second_card = self.played_card_stack.see_card(1)
+        # Check for double
+        if top_card.sameValue(second_card):
+            return True
+        # Check for sandwich
+        if n_cards >= 3:
+            third_card = self.played_card_stack.see_card(2)
+            if top_card.sameValue(third_card):
+                return True
+        return False
