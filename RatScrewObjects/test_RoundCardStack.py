@@ -1,5 +1,5 @@
 import pytest
-from CardDeckObjects.Card import Card
+from CardDeckObjects import Card
 from RatScrewObjects.RoundCardStack import RoundCardStack
 
 
@@ -92,7 +92,7 @@ class TestRoundCardStack:
         assert stack.is_valid_slap() is False
 
         sandwich_val = "9"
-        # Add three cards that don't make a sandwich 
+        # Add three cards that don't make a sandwich
         stack.add_played_card(Card("7", "clubs"))
         stack.add_played_card(Card(sandwich_val, "hearts"))
         stack.add_played_card(Card("2", "diamonds"))

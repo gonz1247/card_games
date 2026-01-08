@@ -1,6 +1,6 @@
-import os
 from CardDeckObjects import CardDeck
-from RatScrewObjects import RatScrewPlayer
+from RatScrewObjects.RoundCardStack import RoundCardStack
+from RatScrewObjects.RatScrewPlayer import RatScrewPlayer
 
 
 class RatScrewGame:
@@ -103,11 +103,36 @@ class RatScrewGame:
         ----------
         Index of player to start next round
         """
-        # Clear console for new round
-        # TODO: Maybe switch to just a print of new lines instead of clearing console
-        os.system("cls" if os.name == "nt" else "clear")
-        round_stack = CardDeck(nDecks=0)
-        print(f"New round, player #{starting_player} goes first.")
+        round_stack = RoundCardStack()
+        print("--- New Round Starting ---")
+        print(f"Player #{starting_player} goes first.")
+        round_winner = None
+        current_player = starting_player
+        player_turn_over = False
+        while round_winner is None:
+            # Check to see if current player's turn is over
+            if player_turn_over:
+                print(f"Player #{current_player}, your turn is over.")
+                current_player = self._get_next_elgible_player(current_player)
+                print(f"Player #{current_player} is up.")
+
+            # await player action(s)
+            # player_actions = input("> ")
+
+            # # update all card stacks based on player actions (play/slap)
+            # round_winner, player_turn_over = self.update_card_stacks(
+            #     round_stack, current_player, player_actions
+            # )
+
+            # check if current player's turn is over
+            ## over if has no more cards --> (previous player wins stack)
+            ## over if no more chances to play face-card --> (previous player wins stack)
+            ## over if valid slap --> (slapping player wins stack)
+            ## over if player played a face-card --> next player plays
+            ## over if player played a non face-card when no face card was requried --> next player plays
+
+            break  # placeholder to avoid infinite loop
+
         # Iterate through players turns until someone wins round
         print("~plays a round of rat screw~")
         # Move all cards to first player so that game ends (placeholder)
@@ -129,3 +154,22 @@ class RatScrewGame:
         for p_idx, p in enumerate(self.players):
             if p.card_stack.nCards == self._MAX_CARDS:
                 return p_idx
+
+    def _get_next_elgible_player(self, current_player_idx: int) -> int:
+        """
+        Get index of next player who has cards to play
+
+        Parameters
+        ----------
+        current_player_idx: int
+            Index of current player
+
+        Returns
+        ----------
+        Index of next player with cards to play
+        """
+        n_players = len(self.players)
+        next_player_idx = (current_player_idx + 1) % n_players
+        while self.players[next_player_idx].card_stack.nCards == 0:
+            next_player_idx = (next_player_idx + 1) % n_players
+        return next_player_idx
