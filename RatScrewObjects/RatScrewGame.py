@@ -1,4 +1,4 @@
-import os, random, time
+import os
 from CardDeckObjects import CardDeck
 from RatScrewObjects import RatScrewPlayer
 
@@ -7,6 +7,9 @@ class RatScrewGame:
     """
     Class to run and manage gameplay state of Rat Screw card game
     """
+
+    _MAX_CARDS = 52
+    _MAX_PLAYERS = _MAX_CARDS
 
     def __init__(self) -> None:
         """
@@ -22,6 +25,7 @@ class RatScrewGame:
         self.slap_keys = dict()
         self.players = list()
         self.card_stack = CardDeck(nDecks=1)
+        assert self.card_stack.nCards == self._MAX_CARDS
 
     def play_game(self) -> None:
         """
@@ -66,8 +70,8 @@ class RatScrewGame:
             Number of players that will play rat screw game
         """
         # Check number of players
-        if n_players > 52:
-            raise ValueError("Maximum number of players is 52")
+        if n_players > self._MAX_PLAYERS:
+            raise ValueError(f"Maximum number of players is {self._MAX_PLAYERS}")
         self.reset_game_parameters()
         # Create initial stack for each player
         initial_card_stacks = self.card_stack.deal_deck(nPiles=n_players)
@@ -115,7 +119,7 @@ class RatScrewGame:
 
     def check_for_winner(self) -> int | None:
         """
-        See if any player has won by collecting all (52) cards
+        See if any player has won by collecting all cards
 
         Returns
         ----------
@@ -123,5 +127,5 @@ class RatScrewGame:
         """
         # Iterate through players to see if anyone has all the cards
         for p_idx, p in enumerate(self.players):
-            if p.card_stack.nCards == 52:
+            if p.card_stack.nCards == self._MAX_CARDS:
                 return p_idx

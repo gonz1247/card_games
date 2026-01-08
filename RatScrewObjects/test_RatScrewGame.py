@@ -1,7 +1,6 @@
 import pytest
 from CardDeckObjects import CardDeck
 from RatScrewObjects.RatScrewGame import RatScrewGame
-from RatScrewObjects.RatScrewPlayer import RatScrewPlayer
 
 
 class TestRatScrewGame:
@@ -27,7 +26,8 @@ class TestRatScrewGame:
         assert game.play_keys == dict() and isinstance(game.play_keys, dict)
         assert game.slap_keys == dict() and isinstance(game.slap_keys, dict)
         assert game.players == list() and isinstance(game.players, list)
-        assert isinstance(game.card_stack, CardDeck) and game.card_stack.nCards == 52
+        assert isinstance(game.card_stack, CardDeck)
+        assert game.card_stack.nCards == game._MAX_CARDS
 
     def test_get_number_of_players(self, monkeypatch):
         """
@@ -50,9 +50,9 @@ class TestRatScrewGame:
         Test setup_game method of RatScrewGame when too many players are provided.
         """
         game = RatScrewGame()
-        # Test with more than 52 players
+        # Test with more than max number of players
         with pytest.raises(ValueError):
-            game.setup_game(53)
+            game.setup_game(game._MAX_PLAYERS + 1)
 
     def test_setup_game_with_valid_number_of_players(self, monkeypatch):
         """
@@ -75,7 +75,7 @@ class TestRatScrewGame:
 
         # Check that the card stack has been distributed among players
         total_player_cards = sum(player.card_stack.nCards for player in game.players)
-        assert 52 == total_player_cards + game.card_stack.nCards
+        assert total_player_cards + game.card_stack.nCards == game._MAX_CARDS
 
     def test_check_for_winner(self, monkeypatch):
         """
