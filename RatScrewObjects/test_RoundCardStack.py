@@ -65,3 +65,39 @@ class TestRoundCardStack:
         stack = RoundCardStack()
         stack.add_played_card(face_card)
         assert stack.has_stack_been_won() is False
+
+    def test_is_valid_slap_double(self):
+        """
+        Test is_valid_slap method for valid double.
+        """
+        stack = RoundCardStack()
+        # Initially, slap should be invalid
+        assert stack.is_valid_slap() is False
+
+        double_val = "5"
+        # Add two cards that are not the same to make slap invalid
+        stack.add_played_card(Card("3", "clubs"))
+        stack.add_played_card(Card(double_val, "diamonds"))
+        assert stack.is_valid_slap() is False
+        # Add card with the same value as the last card to make a double
+        stack.add_played_card(Card(double_val, "hearts"))
+        assert stack.is_valid_slap() is True
+
+    def test_is_valid_slap_sandwich(self):
+        """
+        Test is_valid_slap method for valid sandwich.
+        """
+        stack = RoundCardStack()
+        # Initially, slap should be invalid
+        assert stack.is_valid_slap() is False
+
+        sandwich_val = "9"
+        # Add three cards that don't make a sandwich 
+        stack.add_played_card(Card("7", "clubs"))
+        stack.add_played_card(Card(sandwich_val, "hearts"))
+        stack.add_played_card(Card("2", "diamonds"))
+        assert stack.is_valid_slap() is False
+
+        # Add card with the same value as the second card to make a sandwich
+        stack.add_played_card(Card(sandwich_val, "spades"))
+        assert stack.is_valid_slap() is True
