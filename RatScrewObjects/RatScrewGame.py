@@ -172,4 +172,7 @@ class RatScrewGame:
         next_player_idx = (current_player_idx + 1) % n_players
         while self.players[next_player_idx].card_stack.nCards == 0:
             next_player_idx = (next_player_idx + 1) % n_players
+            if next_player_idx == current_player_idx:
+                # No other players have cards
+                break
         return next_player_idx

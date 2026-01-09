@@ -135,3 +135,46 @@ class TestRatScrewGame:
         # TODO: When play_round is fully implemented, can instead run this test by having a two person game where
         #       someone does penality slaps will they have no cards (round and game will be over at that point)
         assert next_starting_player == 0
+
+    def test_get_next_elgible_player(self, monkeypatch):
+        """
+        Test _get_next_elgible_player method of RatScrewGame.
+        """
+        game = RatScrewGame()
+        n_players = 4
+        # Patch the built-in 'input' function to provide unique keys for each player
+        user_inputs = iter(["a", "b", "c", "d", "e", "f", "g", "h"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game.setup_game(n_players)
+
+        # Set players 1 and 2 to have no cards
+        game.players[1].card_stack = CardDeck(nDecks=0)
+        game.players[2].card_stack = CardDeck(nDecks=0)
+
+        # Starting from player 0, the next elgible player should be player 3
+        next_player = game._get_next_elgible_player(current_player_idx=0)
+        assert next_player == 3
+
+        # Starting from player 3, the next elgible player should be player 0
+        next_player = game._get_next_elgible_player(3)
+        assert next_player == 0
+
+    def test_get_next_elgible_player_all_players_out(self, monkeypatch):
+        """
+        Test _get_next_elgible_player method of RatScrewGame when all players have no cards.
+        """
+        game = RatScrewGame()
+        n_players = 4
+        # Patch the built-in 'input' function to provide unique keys for each player
+        user_inputs = iter(["a", "b", "c", "d", "e", "f", "g", "h"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game.setup_game(n_players)
+
+        # Set all players to have no cards
+        for p in game.players:
+            p.card_stack = CardDeck(nDecks=0)
+
+        # Since no one has cards, the next elgible player should be the current player
+        for idx in range(n_players):
+            next_player = game._get_next_elgible_player(current_player_idx=idx)
+            assert next_player == idx
