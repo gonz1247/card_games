@@ -1,5 +1,6 @@
 import pytest
 
+from CardDeckObjects import Card
 from RatScrewObjects.RatScrewPlayer import RatScrewPlayer
 
 
@@ -52,3 +53,32 @@ class TestRatScrewPlayer:
         existing_invalid_keys = {"x", "y", "z"}
         # rerun the init test with these existing invalid keys
         self.test_init(monkeypatch, existing_invalid_keys)
+
+    def test_play_card_no_cards(self, monkeypatch):
+        """
+        Test playing a card when player has no cards.
+        """
+        # sequence of user inputs for play and slap keys, invalid input followed by valid input
+        user_inputs = ["foo", "a", "bar", "b"]
+        inputs = iter(user_inputs)
+
+        # Patch the built-in 'input' function to use the iterator
+        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+        player = RatScrewPlayer()
+        with pytest.raises(IndexError):
+            player.play_card()
+
+    def test_play_card_valid(self, monkeypatch):
+        """
+        Test playing a card when player has no cards.
+        """
+        # sequence of user inputs for play and slap keys, invalid input followed by valid input
+        user_inputs = ["foo", "a", "bar", "b"]
+        inputs = iter(user_inputs)
+
+        # Patch the built-in 'input' function to use the iterator
+        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+        player = RatScrewPlayer()
+        expected_card = Card("5", "hearts")
+        player.card_stack.add_card(expected_card)
+        assert player.play_card() == expected_card
