@@ -1,4 +1,4 @@
-from CardDeckObjects import CardDeck
+from CardDeckObjects import CardDeck, Card
 
 
 class RatScrewPlayer:
@@ -27,6 +27,18 @@ class RatScrewPlayer:
         self.slap_key = key_selection
         # player hand / card stack
         self.card_stack = CardDeck(nDecks=0)
+
+    def play_card(self) -> Card:
+        """
+        Play a card from player's card stack
+
+        Returns
+        -------
+        Card played from player's card stack
+        """
+        if self.card_stack.nCards < 1:
+            raise IndexError("No cards left in player's card stack")
+        return self.card_stack.deal_card()
 
     @staticmethod
     def is_valid_action_key(key: str, invalid_action_keys: set = None) -> bool:
