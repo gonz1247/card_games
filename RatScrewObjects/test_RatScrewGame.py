@@ -9,17 +9,17 @@ class MockRatScrewGame(RatScrewGame):
     Mock class of RatScrewGame so that play_game method can be tested
     """
 
-    def play_round(self, starting_player):
+    def _play_round(self, starting_player):
         """
         Do nothing
         """
         pass
 
-    def check_for_winner(self):
+    def _check_for_winner(self):
         """
         Instantly assign winner for game
         """
-        self.game_winner = len(self.players) - 1
+        self._game_winner = len(self._players) - 1
 
 
 class TestRatScrewGame:
@@ -32,24 +32,30 @@ class TestRatScrewGame:
         Test reset_game_parameters method of RatScrewGame.
         """
         game = RatScrewGame()
-        # Modify game parameters to be set to None to ensure reset works
-        game.play_keys = None
-        game.slap_keys = None
-        game.players = None
-        game.round_stack = None
+        # Modify game parameters to be set to something other than their default to ensure reset works
+        game._play_keys = None
+        game._slap_keys = None
+        game._players = None
+        game._round_stack = None
+        self._game_winner = 1
+        self._round_winner = 1
+        self._player_turn_over = True
 
         # Reset game parameters
         game.reset_game_parameters()
 
         # Check that game parameters are reset to initial states
-        assert game.play_keys == dict() and isinstance(game.play_keys, dict)
-        assert game.slap_keys == dict() and isinstance(game.slap_keys, dict)
-        assert game.players == list() and isinstance(game.players, list)
-        assert isinstance(game.round_stack, RoundCardStack)
-        assert game.round_stack.played_card_stack.nCards == 0
-        assert game.round_stack.penalty_card_stack.nCards == 0
-        assert game.round_stack.need_face_card is False
-        assert game.round_stack._face_card_countdown == 0
+        assert game._play_keys == dict() and isinstance(game._play_keys, dict)
+        assert game._slap_keys == dict() and isinstance(game._slap_keys, dict)
+        assert game._players == list() and isinstance(game._players, list)
+        assert isinstance(game._round_stack, RoundCardStack)
+        assert game._round_stack.played_card_stack.nCards == 0
+        assert game._round_stack.penalty_card_stack.nCards == 0
+        assert game._round_stack.need_face_card is False
+        assert game._round_stack._face_card_countdown == 0
+        assert game._game_winner is None
+        assert game._round_winner is None
+        assert game._player_turn_over == False
 
     def test_print_rules(self):
         """
@@ -63,46 +69,37 @@ class TestRatScrewGame:
         """
         RatScrewGame().print_controls_explanation()
 
-    def test_get_number_of_players(self, monkeypatch):
+    def test_ask_user_for_number_of_players_valid(self, monkeypatch):
         """
-        Test get_number_of_players method of RatScrewGame.
+        Test _ask_user_for_number_of_players method of RatScrewGame.
         """
         game = RatScrewGame()
 
         # sequence of user inputs: invalid input followed by valid input
-        user_inputs = ["foo", "3"]
+        user_inputs = ["3"]
         inputs = iter(user_inputs)
 
         # Patch the built-in 'input' function to use the iterator
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        n_players = game.get_number_of_players()
+        n_players = game._ask_user_for_number_of_players()
         assert n_players == 3
 
-    def test_get_number_of_players_invalid_number_of_players(self, monkeypatch):
+    def test_ask_user_for_number_of_players_invalid(self, monkeypatch):
         """
-        Test get_number_of_players method of RatScrewGame when too many or too few players are provided.
+        Test _ask_user_for_number_of_players method of RatScrewGame when too many or too few players are provided.
         """
         game = RatScrewGame()
 
-        # sequence of user inputs: input too many players, input too few players, input valid number of player
-        user_inputs = [str(game._MAX_PLAYERS + 1), "1", "2"]
+        # sequence of user inputs: input non pos integer, input too many players, input too few players, input valid number of player
+        user_inputs = ["foo", str(game._MAX_PLAYERS + 1), "1", "2"]
         inputs = iter(user_inputs)
 
         # Patch the built-in 'input' function to use the iterator
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        n_players = game.get_number_of_players()
+        n_players = game._ask_user_for_number_of_players()
         assert n_players == 2
-
-    def test_setup_game_with_too_many_players(self):
-        """
-        Test setup_game method of RatScrewGame when too many players are provided.
-        """
-        game = RatScrewGame()
-        # Test with more than max number of players
-        with pytest.raises(ValueError):
-            game.setup_game(game._MAX_PLAYERS + 1)
 
     def test_setup_game_with_valid_number_of_players(self, monkeypatch):
         """
@@ -111,24 +108,24 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 3
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d", "e", "f"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Check that the correct number of players have been added
-        assert len(game.players) == n_players
+        assert len(game._players) == n_players
 
         # Check that play and slap key dictionaries point to the correct player index
-        for p_idx, player in enumerate(game.players):
-            assert game.play_keys[player.play_key] == p_idx
-            assert game.slap_keys[player.slap_key] == p_idx
+        for p_idx, player in enumerate(game._players):
+            assert game._play_keys[player.play_key] == p_idx
+            assert game._slap_keys[player.slap_key] == p_idx
 
         # Check that the card stack has been distributed among players
-        total_player_cards = sum(player.card_stack.nCards for player in game.players)
+        total_player_cards = sum(player.card_stack.nCards for player in game._players)
         assert (
             total_player_cards
-            + game.round_stack.played_card_stack.nCards
-            + game.round_stack.penalty_card_stack.nCards
+            + game._round_stack.played_card_stack.nCards
+            + game._round_stack.penalty_card_stack.nCards
             == game._MAX_CARDS
         )
 
@@ -139,24 +136,24 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 3
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d", "e", "f"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Initially, there should be no winner
-        game.check_for_winner()
+        game._check_for_winner()
         assert game.game_winner is None
 
         # Give all cards to player 0 and check for winner
         winner_player_idx = 0
         for p_idx in range(n_players):
             if p_idx == winner_player_idx:
-                game.players[p_idx].card_stack = CardDeck(nDecks=1)
+                game._players[p_idx].card_stack = CardDeck(nDecks=1)
             else:
-                game.players[p_idx].card_stack = CardDeck(nDecks=0)
+                game._players[p_idx].card_stack = CardDeck(nDecks=0)
 
         # Run test and ensure that game state is updated as expected
-        game.check_for_winner()
+        game._check_for_winner()
         assert game.game_winner == winner_player_idx
 
     def test_play_game(self, monkeypatch):
@@ -187,32 +184,32 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup cards for players so that can test round play
         starting_player = 0
         losing_player = 1
-        game.players[starting_player].card_stack = CardDeck(nDecks=0)
-        game.players[starting_player].card_stack.add_card(Card("jack", "hearts"))
-        game.players[losing_player].card_stack = CardDeck(nDecks=0)
-        game.players[losing_player].card_stack.add_card(Card("3", "spades"))
+        game._players[starting_player].card_stack = CardDeck(nDecks=0)
+        game._players[starting_player].card_stack.add_card(Card("jack", "hearts"))
+        game._players[losing_player].card_stack = CardDeck(nDecks=0)
+        game._players[losing_player].card_stack.add_card(Card("3", "spades"))
 
         # Add a card to the penalty stack
-        game.round_stack.add_penalty_card(Card("7", "clubs"))
+        game._round_stack.add_penalty_card(Card("7", "clubs"))
 
         # Patch the built-in 'input' function to force a sequence of plays
         user_inputs = iter(["a", "c"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         # Play round where second player loses since they cannot play a face card
-        game.play_round(starting_player)
-        assert game.round_winner == starting_player
-        assert game.players[starting_player].card_stack.nCards == 3
-        assert game.players[losing_player].card_stack.nCards == 0
-        assert game.round_stack.played_card_stack.nCards == 0
-        assert game.round_stack.penalty_card_stack.nCards == 0
+        game._play_round(starting_player)
+        assert game._round_winner == starting_player
+        assert game._players[starting_player].card_stack.nCards == 3
+        assert game._players[losing_player].card_stack.nCards == 0
+        assert game._round_stack.played_card_stack.nCards == 0
+        assert game._round_stack.penalty_card_stack.nCards == 0
 
     def test_get_next_elgible_player(self, monkeypatch):
         """
@@ -221,13 +218,13 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 4
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d", "e", "f", "g", "h"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f", "g", "h"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Set players 1 and 2 to have no cards
-        game.players[1].card_stack = CardDeck(nDecks=0)
-        game.players[2].card_stack = CardDeck(nDecks=0)
+        game._players[1].card_stack = CardDeck(nDecks=0)
+        game._players[2].card_stack = CardDeck(nDecks=0)
 
         # Starting from player 0, the next elgible player should be player 3
         next_player = game._get_next_elgible_player(current_player_idx=0)
@@ -244,12 +241,12 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 4
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d", "e", "f", "g", "h"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f", "g", "h"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Set all players to have no cards
-        for p in game.players:
+        for p in game._players:
             p.card_stack = CardDeck(nDecks=0)
 
         # Since no one has cards, the next elgible player should be the current player
@@ -264,27 +261,27 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to require a face card to be played
-        game.round_stack._need_face_card = True
-        game.round_stack._face_card_countdown = 1
+        game._round_stack._need_face_card = True
+        game._round_stack._face_card_countdown = 1
 
         # Override current player's card stack to have no face cards
         current_player_idx = 0
-        game.players[current_player_idx].card_stack = CardDeck(nDecks=0)
-        game.players[current_player_idx].card_stack.add_card(Card("2", "hearts"))
+        game._players[current_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[current_player_idx].card_stack.add_card(Card("2", "hearts"))
 
         # Test playing a card
         previous_player_idx = 1
-        game.process_playing_card(
+        game._process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert game.round_winner == previous_player_idx
-        assert game.player_turn_over is True
+        assert game._round_winner == previous_player_idx
+        assert game._player_turn_over is True
 
     def test_process_playing_card_face_card_played(self, monkeypatch):
         """
@@ -293,27 +290,27 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to not require a face card to be played
-        game.round_stack._need_face_card = False
-        game.round_stack._face_card_countdown = 0
+        game._round_stack._need_face_card = False
+        game._round_stack._face_card_countdown = 0
 
         # Override current player's card stack to have a face card
         current_player_idx = 0
-        game.players[current_player_idx].card_stack = CardDeck(nDecks=0)
-        game.players[current_player_idx].card_stack.add_card(Card("king", "hearts"))
+        game._players[current_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[current_player_idx].card_stack.add_card(Card("king", "hearts"))
 
         # Test playing a card
         previous_player_idx = 1
-        game.process_playing_card(
+        game._process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert game.round_winner is None  # no one should win the round
-        assert game.player_turn_over is True  # since they played a face card
+        assert game._round_winner is None  # no one should win the round
+        assert game._player_turn_over is True  # since they played a face card
 
     def test_process_playing_card_turn_still_going(self, monkeypatch):
         """
@@ -322,28 +319,28 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to require a face card to be played within two plays
-        game.round_stack._need_face_card = True
-        game.round_stack._face_card_countdown = 2
+        game._round_stack._need_face_card = True
+        game._round_stack._face_card_countdown = 2
 
         # Override current player's card stack to have only one card
         current_player_idx = 0
-        game.players[current_player_idx].card_stack = CardDeck(nDecks=0)
-        game.players[current_player_idx].card_stack.add_card(Card("5", "hearts"))
-        game.players[current_player_idx].card_stack.add_card(Card("9", "spades"))
+        game._players[current_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[current_player_idx].card_stack.add_card(Card("5", "hearts"))
+        game._players[current_player_idx].card_stack.add_card(Card("9", "spades"))
 
         # Test playing a card
         previous_player_idx = 1
-        game.process_playing_card(
+        game._process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert game.round_winner is None  # player can still play
-        assert game.player_turn_over is False  # since countdown has not reached zero
+        assert game._round_winner is None  # player can still play
+        assert game._player_turn_over is False  # since countdown has not reached zero
 
     def test_process_slapping_stack_valid_slap(self, monkeypatch):
         """
@@ -352,22 +349,22 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in a valid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("5", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("5", "spades"))
 
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        game.process_slapping_stack(
+        game._process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
-        assert game.round_winner == slapping_player_idx
+        assert game._round_winner == slapping_player_idx
 
     def test_process_slapping_stack_invalid_slap_no_cards(self, monkeypatch):
         """
@@ -376,25 +373,25 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in an invalid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("6", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("6", "spades"))
 
         # Set slapping player to have no cards
         slapping_player_idx = 0
-        game.players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
 
         # Test slapping the stack
         current_player_idx = 1
-        game.process_slapping_stack(
+        game._process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
-        assert game.round_winner is None
+        assert game._round_winner is None
 
     def test_process_slapping_stack_invalid_slap_with_cards(self, monkeypatch):
         """
@@ -403,30 +400,30 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in an invalid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("6", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("6", "spades"))
 
         # Ensure slapping player has cards
         slapping_player_idx = 0
-        game.players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
-        game.players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
+        game._players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
         expected_cards_after_penalty = (
-            game.players[slapping_player_idx].card_stack.nCards - 1
+            game._players[slapping_player_idx].card_stack.nCards - 1
         )
 
         # Test slapping the stack
         current_player_idx = 1
-        game.process_slapping_stack(
+        game._process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
         assert (
-            game.players[slapping_player_idx].card_stack.nCards
+            game._players[slapping_player_idx].card_stack.nCards
             == expected_cards_after_penalty
         )
 
@@ -437,25 +434,25 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in a invalid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("7", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("7", "spades"))
 
         # set current player to only have one card so they will have no cards after penalty
         slapping_player_idx = 0
-        game.players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
-        game.players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
+        game._players[slapping_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
 
         # Test slapping the stack by the current player
-        game.process_slapping_stack(
+        game._process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=slapping_player_idx,
         )
-        assert game.player_turn_over is True
+        assert game._player_turn_over is True
 
     def test_process_player_actions_card_played(self, monkeypatch):
         """
@@ -465,29 +462,29 @@ class TestRatScrewGame:
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         play_card_key = "a"
-        user_inputs = iter([play_card_key, "b", "c", "d"])
+        user_inputs = iter([str(n_players), play_card_key, "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup player cards with a single known card
         current_player_idx = 0
-        game.players[current_player_idx].card_stack = CardDeck(nDecks=0)
+        game._players[current_player_idx].card_stack = CardDeck(nDecks=0)
         played_card = Card("5", "hearts")
-        game.players[current_player_idx].card_stack.add_card(played_card)
+        game._players[current_player_idx].card_stack.add_card(played_card)
 
         # Test processing player actions
         previous_player_idx = 1
-        game.process_player_actions(
+        game._process_player_actions(
             player_actions=play_card_key,
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert game.round_winner is None
-        assert game.player_turn_over is True
-        assert game.players[current_player_idx].card_stack.nCards == 0
-        assert game.round_stack.played_card_stack.nCards == 1
-        assert game.round_stack.penalty_card_stack.nCards == 0
-        assert game.round_stack.played_card_stack.see_card(0) == played_card
+        assert game._round_winner is None
+        assert game._player_turn_over is True
+        assert game._players[current_player_idx].card_stack.nCards == 0
+        assert game._round_stack.played_card_stack.nCards == 1
+        assert game._round_stack.penalty_card_stack.nCards == 0
+        assert game._round_stack.played_card_stack.see_card(0) == played_card
 
     def test_process_player_actions_stack_slapped_multiple_attempts(self, monkeypatch):
         """
@@ -497,35 +494,35 @@ class TestRatScrewGame:
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         slap_key = "b"
-        user_inputs = iter(["a", slap_key, "c", "d"])
+        user_inputs = iter([str(n_players), "a", slap_key, "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in a invalid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("6", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("6", "spades"))
 
         # Get expected number of cards after penalty
         slapping_player_idx = 0
         expected_cards_after_penalty = (
-            game.players[slapping_player_idx].card_stack.nCards - 1
+            game._players[slapping_player_idx].card_stack.nCards - 1
         )
 
         # Test slapping the stack
         current_player_idx = 1
-        game.process_player_actions(
+        game._process_player_actions(
             player_actions=slap_key * 3,  # multiple slap attempts
             current_player_idx=current_player_idx,
             previous_player_idx=0,
         )
-        assert game.round_winner is None
-        assert game.player_turn_over is False
+        assert game._round_winner is None
+        assert game._player_turn_over is False
         assert (
-            game.players[slapping_player_idx].card_stack.nCards
+            game._players[slapping_player_idx].card_stack.nCards
             == expected_cards_after_penalty
         )
-        assert game.round_stack.played_card_stack.nCards == 2
-        assert game.round_stack.penalty_card_stack.nCards == 1
+        assert game._round_stack.played_card_stack.nCards == 2
+        assert game._round_stack.penalty_card_stack.nCards == 1
 
     def test_process_player_actions_stack_slapped_successfully(self, monkeypatch):
         """
@@ -535,23 +532,23 @@ class TestRatScrewGame:
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         slap_key = "b"
-        user_inputs = iter(["a", slap_key, "c", "d"])
+        user_inputs = iter([str(n_players), "a", slap_key, "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Setup round stack to be in a valid slap state
-        game.round_stack.played_card_stack.add_card(Card("5", "hearts"))
-        game.round_stack.played_card_stack.add_card(Card("5", "spades"))
+        game._round_stack.played_card_stack.add_card(Card("5", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("5", "spades"))
 
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        game.process_player_actions(
+        game._process_player_actions(
             player_actions=slap_key,
             current_player_idx=current_player_idx,
             previous_player_idx=0,
         )
-        assert game.round_winner == slapping_player_idx
+        assert game._round_winner == slapping_player_idx
 
     def test_process_player_actions_no_valid_actions(self, monkeypatch):
         """
@@ -560,17 +557,17 @@ class TestRatScrewGame:
         game = RatScrewGame()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
-        user_inputs = iter(["a", "b", "c", "d"])
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-        game.setup_game(n_players)
+        game._setup_game()
 
         # Test processing player actions with no valid actions
         current_player_idx = 0
         previous_player_idx = 1
-        game.process_player_actions(
+        game._process_player_actions(
             player_actions="xzy",  # invalid actions
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert game.round_winner is None
-        assert game.player_turn_over is False
+        assert game._round_winner is None
+        assert game._player_turn_over is False
