@@ -133,9 +133,11 @@ class TestRatScrewGame:
         # Patch the built-in 'input' function to provide unique keys for each player and number of players
         user_inputs = iter(
             [
-                "1",  # number of players
+                "2",  # number of players
                 "a",  # player 1 play key
                 "b",  # player 1 slap key
+                "c",  # player 2 play key
+                "d",  # player 2 slap key
             ]
         )
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))

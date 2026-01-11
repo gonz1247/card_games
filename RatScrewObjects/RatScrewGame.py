@@ -57,7 +57,8 @@ class RatScrewGame:
         n_players = "dummy"
         while not n_players.isnumeric():
             n_players = input("How many players are part of this game? ")
-        if int(n_players) > self._MAX_PLAYERS:
+        if int(n_players) > self._MAX_PLAYERS or int(n_players) < 2:
+            print(f"Number of players must be between 2 and {self._MAX_PLAYERS}")
             return self.get_number_of_players()
         return int(n_players)
 
