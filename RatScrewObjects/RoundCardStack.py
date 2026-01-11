@@ -6,16 +6,63 @@ class RoundCardStack:
     Class to manage the stack of cards played during a round of Rat Screw
     """
 
-    _face_card_countdown_cypher = {"jack": 1, "queen": 2, "king": 3, "ace": 4}
-
     def __init__(self) -> None:
+        """Initialize instance of RoundCardStack"""
+        self.reset()
+
+    def reset(self) -> None:
+        """Reset round stack to intialized state"""
+        self._played_card_stack = CardDeck(nDecks=0)
+        self._penalty_card_stack = CardDeck(nDecks=0)
+        self._need_face_card = False
+        self._face_card_countdown = 0
+
+    @property
+    def need_face_card(self) -> bool:
+        """Return round stack state of needing a face card added to it"""
+        return self._need_face_card
+
+    @need_face_card.setter
+    def need_face_card(self, value) -> None:
+        """Set need_face_card to read-only"""
+        raise AttributeError(f"need_face_card is a read-only attribute")
+
+    @property
+    def played_card_stack(self) -> CardDeck:
+        """Return played_card_stack directly"""
+        return self._played_card_stack
+
+    @played_card_stack.setter
+    def played_card_stack(self, value) -> None:
+        """Set played_card_stack to read-only"""
+        raise AttributeError(f"played_card_stack is a read-only attribute")
+
+    @property
+    def penalty_card_stack(self) -> CardDeck:
+        """Return penalty_card_stack directly"""
+        return self._penalty_card_stack
+
+    @penalty_card_stack.setter
+    def penalty_card_stack(self, value) -> None:
+        """Set penalty_card_stack to read-only"""
+        raise AttributeError(f"penalty_card_stack is a read-only attribute")
+
+    def _process_face_card(self, face_card: Card) -> None:
         """
-        Initialize instance of RoundCardStack
+        Update stack state based on the face card added
+
+        Parameters
+        ----------
+        face_card: Card
+            Face card that has been added to the round stack
         """
-        self.played_card_stack = CardDeck(nDecks=0)
-        self.penalty_card_stack = CardDeck(nDecks=0)
-        self.need_face_card = False
-        self.face_card_countdown = 0
+        # Check that card is a face card
+        face_card_countdown_cypher = {"jack": 1, "queen": 2, "king": 3, "ace": 4}
+        if face_card.value not in face_card_countdown_cypher:
+            raise ValueError("Cannot process non face card as a face card")
+        # Update stack state to indicate another facecard is needed and set a countdown
+        self._need_face_card = True
+        self._face_card_countdown = face_card_countdown_cypher[face_card.value]
 
     def add_played_card(self, card: Card) -> None:
         """
@@ -26,15 +73,16 @@ class RoundCardStack:
         card: Card
             The card to be played onto the round stack.
         """
+        if not isinstance(card, Card):
+            raise TypeError("Only Card instances can be added to the round stack")
         self.played_card_stack.add_card(card)
         # Check if played card is a face card
         if card.isFaceCard():
-            self.need_face_card = True
-            self.face_card_countdown = self._face_card_countdown_cypher[card.value]
+            self._process_face_card(card)
         else:
-            self.face_card_countdown -= 1
+            self._face_card_countdown -= 1
 
-    def add_penalty_card(self, card) -> None:
+    def add_penalty_card(self, card: Card) -> None:
         """
         Add penalty cards to the penalty stack
 
@@ -43,11 +91,13 @@ class RoundCardStack:
         card: Card
             Card to be added to the penalty stack.
         """
+        if not isinstance(card, Card):
+            raise TypeError("Only Card instances can be added to the round stack")
         self.penalty_card_stack.add_card(card)
 
     def has_stack_been_won(self) -> bool:
         """
-        Determine stack has been won by a player
+        Determine if stack has been won by a player
 
         Returns
         -------
@@ -55,7 +105,7 @@ class RoundCardStack:
         """
         if self.need_face_card is False:
             return False
-        return self.face_card_countdown < 1
+        return self._face_card_countdown < 1
 
     def is_valid_slap(self) -> bool:
         """
@@ -76,6 +126,5 @@ class RoundCardStack:
         # Check for sandwich
         if n_cards >= 3:
             third_card = self.played_card_stack.see_card(2)
-            if top_card.sameValue(third_card):
-                return True
+            return top_card.sameValue(third_card)
         return False

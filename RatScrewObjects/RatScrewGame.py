@@ -128,7 +128,8 @@ class RatScrewGame:
         fresh_deck = CardDeck(nDecks=self._N_DECKS)
         initial_card_stacks = fresh_deck.deal_deck(nPiles=n_players)
         # Move left over cards from fresh deck to round stack penalty stack
-        self.round_stack.penalty_card_stack = fresh_deck
+        while fresh_deck.nCards > 0:
+            self.round_stack.add_penalty_card(fresh_deck.deal_card())
         # initialize each player with stack of cards and action keys assigned
         for p_idx, p_card_stack in enumerate(initial_card_stacks):
             print(f"Setting up player #{p_idx}")
@@ -187,7 +188,7 @@ class RatScrewGame:
         )
 
         # Reset round stack for next round
-        self.round_stack = RoundCardStack()
+        self.round_stack.reset()
 
     def check_for_winner(self) -> None:
         """

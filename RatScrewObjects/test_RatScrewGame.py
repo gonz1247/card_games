@@ -49,7 +49,7 @@ class TestRatScrewGame:
         assert game.round_stack.played_card_stack.nCards == 0
         assert game.round_stack.penalty_card_stack.nCards == 0
         assert game.round_stack.need_face_card is False
-        assert game.round_stack.face_card_countdown == 0
+        assert game.round_stack._face_card_countdown == 0
 
     def test_print_rules(self):
         """
@@ -267,8 +267,8 @@ class TestRatScrewGame:
         game.setup_game(n_players)
 
         # Setup round stack to require a face card to be played
-        game.round_stack.need_face_card = True
-        game.round_stack.face_card_countdown = 1
+        game.round_stack._need_face_card = True
+        game.round_stack._face_card_countdown = 1
 
         # Override current player's card stack to have no face cards
         current_player_idx = 0
@@ -296,8 +296,8 @@ class TestRatScrewGame:
         game.setup_game(n_players)
 
         # Setup round stack to not require a face card to be played
-        game.round_stack.need_face_card = False
-        game.round_stack.face_card_countdown = 0
+        game.round_stack._need_face_card = False
+        game.round_stack._face_card_countdown = 0
 
         # Override current player's card stack to have a face card
         current_player_idx = 0
@@ -325,8 +325,8 @@ class TestRatScrewGame:
         game.setup_game(n_players)
 
         # Setup round stack to require a face card to be played within two plays
-        game.round_stack.need_face_card = True
-        game.round_stack.face_card_countdown = 2
+        game.round_stack._need_face_card = True
+        game.round_stack._face_card_countdown = 2
 
         # Override current player's card stack to have only one card
         current_player_idx = 0
