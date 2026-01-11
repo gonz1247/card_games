@@ -23,14 +23,24 @@ class RatScrewGame:
         Resets game parameters to initial/empty states
         """
         # Parameters for tracking players
-        self.play_keys = dict()
-        self.slap_keys = dict()
-        self.players = list()
+        self._play_keys = dict()
+        self._slap_keys = dict()
+        self._players = list()
         # Parameters for tracking game state
-        self.round_stack = RoundCardStack()
-        self.game_winner = None
-        self.round_winner = None
-        self.player_turn_over = False
+        self._round_stack = RoundCardStack()
+        self._game_winner = None
+        self._round_winner = None
+        self._player_turn_over = False
+
+    @property
+    def game_winner(self) -> int | None:
+        """Return game_winner directly"""
+        return self._game_winner
+
+    @game_winner.setter
+    def game_winner(self, value) -> None:
+        """Set game_winner to read-only"""
+        raise AttributeError(f"game_winner is a read-only attribute")
 
     def print_rules(self) -> None:
         """
@@ -81,21 +91,17 @@ class RatScrewGame:
         Play rat screw game
         """
         print("Starting new rat screw game")
-        # Get number of players for the game
-        n_players = self.get_number_of_players()
-        print(f"{n_players} players are part of this game")
         # Setup game for players
-        self.setup_game(n_players)
+        self._setup_game()
         # Play rounds until there is a winner for the game
-        self.game_winner = None
-        self.round_winner = 0
+        self._round_winner = 0
         while self.game_winner is None:
-            self.play_round(starting_player=self.round_winner)
+            self._play_round(starting_player=self._round_winner)
             # check if someone won after round
-            self.check_for_winner()
+            self._check_for_winner()
         print(f"Player #{self.game_winner} has won the game!")
 
-    def get_number_of_players(self) -> int:
+    def _ask_user_for_number_of_players(self) -> int:
         """
         Ask user how many players will be part of game and validate input
 
@@ -108,44 +114,40 @@ class RatScrewGame:
             n_players = input("How many players are part of this game? ")
         if int(n_players) > self._MAX_PLAYERS or int(n_players) < 2:
             print(f"Number of players must be between 2 and {self._MAX_PLAYERS}")
-            return self.get_number_of_players()
+            return self._ask_user_for_number_of_players()
         return int(n_players)
 
-    def setup_game(self, n_players) -> None:
+    def _setup_game(self) -> None:
         """
         Setup rat screw game with n_players playing
-
-        Parameters
-        ----------
-        n_players: int
-            Number of players that will play rat screw game
         """
-        # Check number of players
-        if n_players > self._MAX_PLAYERS:
-            raise ValueError(f"Maximum number of players is {self._MAX_PLAYERS}")
+        # Ensure that game parameters are at defaults
         self.reset_game_parameters()
+        # Get number of players for the game
+        n_players = self._ask_user_for_number_of_players()
+        print(f"{n_players} players are part of this game")
         # Create initial stack for each player
         fresh_deck = CardDeck(nDecks=self._N_DECKS)
         initial_card_stacks = fresh_deck.deal_deck(nPiles=n_players)
         # Move left over cards from fresh deck to round stack penalty stack
         while fresh_deck.nCards > 0:
-            self.round_stack.add_penalty_card(fresh_deck.deal_card())
+            self._round_stack.add_penalty_card(fresh_deck.deal_card())
         # initialize each player with stack of cards and action keys assigned
         for p_idx, p_card_stack in enumerate(initial_card_stacks):
             print(f"Setting up player #{p_idx}")
             # intialize player
             p = RatScrewPlayer(
-                invalid_action_keys=(self.play_keys.keys() | self.slap_keys.keys())
+                invalid_action_keys=(self._play_keys.keys() | self._slap_keys.keys())
             )
             # add action keys to dictionary to be able to reverse look up player index by their action keys
-            self.play_keys[p.play_key] = p_idx
-            self.slap_keys[p.slap_key] = p_idx
+            self._play_keys[p.play_key] = p_idx
+            self._slap_keys[p.slap_key] = p_idx
             # give player initial stack
             p.card_stack = p_card_stack
             # add player to game
-            self.players.append(p)
+            self._players.append(p)
 
-    def play_round(self, starting_player: int) -> None:
+    def _play_round(self, starting_player: int) -> None:
         """
         Play a single round of rat screw and update game state parameters
 
@@ -156,41 +158,43 @@ class RatScrewGame:
         """
         print("--- New Round Starting ---")
         # Show current card counts and controls for each player
-        for p_idx, p in enumerate(self.players):
+        for p_idx, p in enumerate(self._players):
             print(
                 f"Player #{p_idx} has {p.card_stack.nCards} cards. Play key: '{p.play_key}', Slap key: '{p.slap_key}'"
             )
         print(f"Player #{starting_player} goes first.")
         previous_player = None
         current_player = starting_player
-        self.round_winner = None
-        self.player_turn_over = False
-        while self.round_winner is None:
+        self._round_winner = None
+        self._player_turn_over = False
+        while self._round_winner is None:
             # Check to see if current player's turn is over
-            if self.player_turn_over:
+            if self._player_turn_over:
                 previous_player = current_player
                 current_player = self._get_next_elgible_player(current_player)
-                self.player_turn_over = False
+                self._player_turn_over = False
 
             # await player action(s)
             player_actions = input(f"P#{current_player}> ")
 
             # Process player actions and update game state
-            self.process_player_actions(player_actions, current_player, previous_player)
+            self._process_player_actions(
+                player_actions, current_player, previous_player
+            )
 
         # Award round stack to round winner (get all penalty and played cards)
-        print(f"Player #{self.round_winner} has won the round!")
-        self.players[self.round_winner].take_round_stack(self.round_stack)
+        print(f"Player #{self._round_winner} has won the round!")
+        self._players[self._round_winner].take_round_stack(self._round_stack)
 
-    def check_for_winner(self) -> None:
+    def _check_for_winner(self) -> None:
         """
         Update game_winner state based on if any player has collected all cards
         """
-        self.game_winner = None
+        self._game_winner = None
         # Iterate through players to see if anyone has all the cards
-        for p_idx, p in enumerate(self.players):
+        for p_idx, p in enumerate(self._players):
             if p.card_stack.nCards == self._MAX_CARDS:
-                self.game_winner = p_idx
+                self._game_winner = p_idx
                 return
 
     def _get_next_elgible_player(self, current_player_idx: int) -> int:
@@ -206,16 +210,16 @@ class RatScrewGame:
         ----------
         Index of next player with cards to play
         """
-        n_players = len(self.players)
+        n_players = len(self._players)
         next_player_idx = (current_player_idx + 1) % n_players
-        while self.players[next_player_idx].card_stack.nCards == 0:
+        while self._players[next_player_idx].card_stack.nCards == 0:
             next_player_idx = (next_player_idx + 1) % n_players
             if next_player_idx == current_player_idx:
                 # No other players have cards
                 break
         return next_player_idx
 
-    def process_player_actions(
+    def _process_player_actions(
         self,
         player_actions: str,
         current_player_idx: int,
@@ -242,19 +246,19 @@ class RatScrewGame:
             play_once_checker.add(key)
             # Process action if key matches play or slap keys
             if (
-                key == self.players[current_player_idx].play_key
-                and not self.player_turn_over
+                key == self._players[current_player_idx].play_key
+                and not self._player_turn_over
             ):
-                self.process_playing_card(current_player_idx, previous_player_idx)
+                self._process_playing_card(current_player_idx, previous_player_idx)
                 # Stop processing other player actions since card has been played
                 break
-            elif key in self.slap_keys:
-                slapping_player_idx = self.slap_keys[key]
-                self.process_slapping_stack(slapping_player_idx, current_player_idx)
-                if self.round_winner is not None:
+            elif key in self._slap_keys:
+                slapping_player_idx = self._slap_keys[key]
+                self._process_slapping_stack(slapping_player_idx, current_player_idx)
+                if self._round_winner is not None:
                     break
 
-    def process_playing_card(
+    def _process_playing_card(
         self, current_player_idx: int, previous_player_idx: int
     ) -> None:
         """
@@ -268,25 +272,25 @@ class RatScrewGame:
             Index of previous player
         """
         # Play a card from player's stack
-        played_card = self.players[current_player_idx].play_card()
-        self.round_stack.add_played_card(played_card)
+        played_card = self._players[current_player_idx].play_card()
+        self._round_stack.add_played_card(played_card)
         # Print card to screen
         print(played_card)
         # Determine if player's turn is over (satisfied current face card requirement)
-        self.player_turn_over = (
-            played_card.isFaceCard() or self.round_stack.need_face_card is False
+        self._player_turn_over = (
+            played_card.isFaceCard() or self._round_stack.need_face_card is False
         )
         # Check if round was been won
-        if self.round_stack.has_stack_been_won() or (
-            not self.player_turn_over
-            and self.players[current_player_idx].card_stack.nCards < 1
+        if self._round_stack.has_stack_been_won() or (
+            not self._player_turn_over
+            and self._players[current_player_idx].card_stack.nCards < 1
         ):
-            self.round_winner = previous_player_idx
-            self.player_turn_over = True
+            self._round_winner = previous_player_idx
+            self._player_turn_over = True
         else:
-            self.round_winner = None
+            self._round_winner = None
 
-    def process_slapping_stack(
+    def _process_slapping_stack(
         self, slapping_player_idx: int, current_player_idx: int
     ) -> None:
         """
@@ -300,19 +304,21 @@ class RatScrewGame:
             Index of current player
         """
         # Check if slap is valid and round was won
-        if self.round_stack.is_valid_slap():
+        if self._round_stack.is_valid_slap():
             print(f"Player #{slapping_player_idx} made a valid slap!")
-            self.round_winner = slapping_player_idx
+            self._round_winner = slapping_player_idx
             return
         # Process an invalid slap
         print(f"Player #{slapping_player_idx} made an invalid slap!")
         # If slapper has no cards, they cannot pay penalty
-        if self.players[slapping_player_idx].card_stack.nCards < 1:
+        if self._players[slapping_player_idx].card_stack.nCards < 1:
             return
         # Provide penalty card for invalid slap
-        self.round_stack.add_penalty_card(self.players[slapping_player_idx].play_card())
+        self._round_stack.add_penalty_card(
+            self._players[slapping_player_idx].play_card()
+        )
         # If currrent player check that they still have cards after penalty
         if slapping_player_idx == current_player_idx:
-            self.player_turn_over = (
-                self.players[current_player_idx].card_stack.nCards < 1
+            self._player_turn_over = (
+                self._players[current_player_idx].card_stack.nCards < 1
             )
