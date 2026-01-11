@@ -27,6 +27,50 @@ class RatScrewGame:
         self.players = list()
         self.round_stack = RoundCardStack()
 
+    def print_rules(self) -> None:
+        """
+        Print rat screw game rules to screen
+        """
+        print("Rat Screw Game Rules:")
+        print(
+            "1. Objective of the game is to be the first player to collect all the cards. Each player starts with an equal number of cards in their stack."
+        )
+        print(
+            "2. Each round players take turns playing cards from their stack to the center pile."
+        )
+        print(
+            "3. If a face card is played, the next player must play another face card within a certain number of tries (Ace=4 tries, King=3 tries, Queen=2 tries, Jack=1 try).\n   If they fail, the previous player wins the round and adds the center pile to their stack."
+        )
+        print(
+            "4. Players can slap the pile when certain conditions are met to win the pile instantly.\n   Conditions for slapping are if the last two cards match in value (i.e., double) or if the last card matches the card two before it in value (i.e., sandwich)."
+        )
+        print("5. Each round starts with the player that won the previous round.")
+        print("6. The game continues until one player has all the cards.")
+        print()
+
+    def print_controls_explanation(self) -> None:
+        """
+        Print rat screw game controls to screen
+        """
+        print("Rat Screw Game Controls:")
+        print(
+            "1. At the start of the game each player chooses two unique action keys, a play key and a slap key."
+        )
+        print("2. At any point of a round players can input any of their action keys.")
+        print(
+            "3. Once players have inputted action keys, hit 'enter' to submit player actions for processing."
+        )
+        print(
+            "4. A player's play key will only be processed if it's their turn to play and will only be processed once per action submission."
+        )
+        print(
+            "5. The action keys for each player will be printed out at the start of each round, along with the current number of cards they have"
+        )
+        print(
+            "6. At any given time the player whose turn it is will be indicated by the number next to the action input reciever (i.e., P#>) "
+        )
+        print()
+
     def play_game(self) -> None:
         """
         Play rat screw game

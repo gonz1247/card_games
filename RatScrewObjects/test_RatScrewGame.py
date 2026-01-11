@@ -33,6 +33,18 @@ class TestRatScrewGame:
         assert game.round_stack.need_face_card is False
         assert game.round_stack.face_card_countdown == 0
 
+    def test_print_rules(self):
+        """
+        Provide test coverage for print_rules method of RatScrewGame
+        """
+        RatScrewGame().print_rules()
+
+    def test_print_controls_explanation(self):
+        """
+        Provide test coverage for print_controls_explanation method of RatScrewGame
+        """
+        RatScrewGame().print_controls_explanation()
+
     def test_get_number_of_players(self, monkeypatch):
         """
         Test get_number_of_players method of RatScrewGame.
