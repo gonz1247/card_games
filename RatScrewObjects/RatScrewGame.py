@@ -180,15 +180,7 @@ class RatScrewGame:
 
         # Award round stack to round winner (get all penalty and played cards)
         print(f"Player #{self.round_winner} has won the round!")
-        self.players[self.round_winner].card_stack.combine_decks(
-            self.round_stack.penalty_card_stack, onTop=False
-        )
-        self.players[self.round_winner].card_stack.combine_decks(
-            self.round_stack.played_card_stack, onTop=False
-        )
-
-        # Reset round stack for next round
-        self.round_stack.reset()
+        self.players[self.round_winner].take_round_stack(self.round_stack)
 
     def check_for_winner(self) -> None:
         """

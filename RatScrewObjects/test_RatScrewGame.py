@@ -211,6 +211,8 @@ class TestRatScrewGame:
         assert game.round_winner == starting_player
         assert game.players[starting_player].card_stack.nCards == 3
         assert game.players[losing_player].card_stack.nCards == 0
+        assert game.round_stack.played_card_stack.nCards == 0
+        assert game.round_stack.penalty_card_stack.nCards == 0
 
     def test_get_next_elgible_player(self, monkeypatch):
         """
