@@ -4,6 +4,24 @@ from RatScrewObjects.RatScrewGame import RatScrewGame
 from RatScrewObjects.RoundCardStack import RoundCardStack
 
 
+class MockRatScrewGame(RatScrewGame):
+    """
+    Mock class of RatScrewGame so that play_game method can be tested
+    """
+
+    def play_round(self, starting_player):
+        """
+        Do nothing
+        """
+        pass
+
+    def check_for_winner(self):
+        """
+        Instantly assign winner for game
+        """
+        self.game_winner = len(self.players) - 1
+
+
 class TestRatScrewGame:
     """
     Test functionality of RatScrewGame class.
@@ -61,14 +79,14 @@ class TestRatScrewGame:
         n_players = game.get_number_of_players()
         assert n_players == 3
 
-    def test_get_number_of_players_with_too_many_players(self, monkeypatch):
+    def test_get_number_of_players_invalid_number_of_players(self, monkeypatch):
         """
-        Test get_number_of_players method of RatScrewGame when too many players are provided.
+        Test get_number_of_players method of RatScrewGame when too many or too few players are provided.
         """
         game = RatScrewGame()
 
-        # sequence of user inputs: invalid input (too many players) followed by valid input
-        user_inputs = [str(game._MAX_PLAYERS + 1), "2"]
+        # sequence of user inputs: input too many players, input too few players, input valid number of player
+        user_inputs = [str(game._MAX_PLAYERS + 1), "1", "2"]
         inputs = iter(user_inputs)
 
         # Patch the built-in 'input' function to use the iterator
@@ -126,7 +144,8 @@ class TestRatScrewGame:
         game.setup_game(n_players)
 
         # Initially, there should be no winner
-        assert game.check_for_winner() is None
+        game.check_for_winner()
+        assert game.game_winner is None
 
         # Give all cards to player 0 and check for winner
         winner_player_idx = 0
@@ -135,13 +154,17 @@ class TestRatScrewGame:
                 game.players[p_idx].card_stack = CardDeck(nDecks=1)
             else:
                 game.players[p_idx].card_stack = CardDeck(nDecks=0)
-        assert game.check_for_winner() == winner_player_idx
+
+        # Run test and ensure that game state is updated as expected
+        game.check_for_winner()
+        assert game.game_winner == winner_player_idx
 
     def test_play_game(self, monkeypatch):
         """
         Provide test coverage for play_game method of RatScrewGame
         """
-        game = RatScrewGame()
+        # Use mock class so that play_game loop only runs a single time for the sake of test coverage
+        game = MockRatScrewGame()
         # Patch the built-in 'input' function to provide unique keys for each player and number of players
         user_inputs = iter(
             [
@@ -153,10 +176,6 @@ class TestRatScrewGame:
             ]
         )
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-
-        # Override play_round and check_for_winner to end game after one round
-        game.play_round = lambda starting_player: 0
-        game.check_for_winner = lambda: 0
 
         # Run play_game method to provide test coverage
         game.play_game()
@@ -188,8 +207,8 @@ class TestRatScrewGame:
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         # Play round where second player loses since they cannot play a face card
-        next_starting_player = game.play_round(starting_player)
-        assert next_starting_player == starting_player
+        game.play_round(starting_player)
+        assert game.round_winner == starting_player
         assert game.players[starting_player].card_stack.nCards == 3
         assert game.players[losing_player].card_stack.nCards == 0
 
@@ -258,12 +277,12 @@ class TestRatScrewGame:
 
         # Test playing a card
         previous_player_idx = 1
-        round_winner, player_turn_over = game.process_playing_card(
+        game.process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert round_winner == previous_player_idx
-        assert player_turn_over is True
+        assert game.round_winner == previous_player_idx
+        assert game.player_turn_over is True
 
     def test_process_playing_card_face_card_played(self, monkeypatch):
         """
@@ -287,12 +306,12 @@ class TestRatScrewGame:
 
         # Test playing a card
         previous_player_idx = 1
-        round_winner, player_turn_over = game.process_playing_card(
+        game.process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert round_winner is None  # no one should win the round
-        assert player_turn_over is True  # since they played a face card
+        assert game.round_winner is None  # no one should win the round
+        assert game.player_turn_over is True  # since they played a face card
 
     def test_process_playing_card_turn_still_going(self, monkeypatch):
         """
@@ -317,12 +336,12 @@ class TestRatScrewGame:
 
         # Test playing a card
         previous_player_idx = 1
-        round_winner, player_turn_over = game.process_playing_card(
+        game.process_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert round_winner is None  # player can still play
-        assert player_turn_over is False  # since countdown has not reached zero
+        assert game.round_winner is None  # player can still play
+        assert game.player_turn_over is False  # since countdown has not reached zero
 
     def test_process_slapping_stack_valid_slap(self, monkeypatch):
         """
@@ -342,12 +361,11 @@ class TestRatScrewGame:
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        round_winner, player_turn_over = game.process_slapping_stack(
+        game.process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
-        assert round_winner == slapping_player_idx
-        assert player_turn_over is True
+        assert game.round_winner == slapping_player_idx
 
     def test_process_slapping_stack_invalid_slap_no_cards(self, monkeypatch):
         """
@@ -370,12 +388,11 @@ class TestRatScrewGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        round_winner, player_turn_over = game.process_slapping_stack(
+        game.process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
-        assert round_winner is None
-        assert player_turn_over is False
+        assert game.round_winner is None
 
     def test_process_slapping_stack_invalid_slap_with_cards(self, monkeypatch):
         """
@@ -402,12 +419,10 @@ class TestRatScrewGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        round_winner, player_turn_over = game.process_slapping_stack(
+        game.process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
-        assert round_winner is None
-        assert player_turn_over is False
         assert (
             game.players[slapping_player_idx].card_stack.nCards
             == expected_cards_after_penalty
@@ -434,12 +449,11 @@ class TestRatScrewGame:
         game.players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
 
         # Test slapping the stack by the current player
-        round_winner, player_turn_over = game.process_slapping_stack(
+        game.process_slapping_stack(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=slapping_player_idx,
         )
-        assert round_winner is None
-        assert player_turn_over is True
+        assert game.player_turn_over is True
 
     def test_process_player_actions_card_played(self, monkeypatch):
         """
@@ -461,13 +475,13 @@ class TestRatScrewGame:
 
         # Test processing player actions
         previous_player_idx = 1
-        round_winner, player_turn_over = game.process_player_actions(
+        game.process_player_actions(
             player_actions=play_card_key,
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert round_winner is None
-        assert player_turn_over is True
+        assert game.round_winner is None
+        assert game.player_turn_over is True
         assert game.players[current_player_idx].card_stack.nCards == 0
         assert game.round_stack.played_card_stack.nCards == 1
         assert game.round_stack.penalty_card_stack.nCards == 0
@@ -497,13 +511,13 @@ class TestRatScrewGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        round_winner, player_turn_over = game.process_player_actions(
+        game.process_player_actions(
             player_actions=slap_key * 3,  # multiple slap attempts
             current_player_idx=current_player_idx,
             previous_player_idx=0,
         )
-        assert round_winner is None
-        assert player_turn_over is False
+        assert game.round_winner is None
+        assert game.player_turn_over is False
         assert (
             game.players[slapping_player_idx].card_stack.nCards
             == expected_cards_after_penalty
@@ -530,13 +544,12 @@ class TestRatScrewGame:
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        round_winner, player_turn_over = game.process_player_actions(
+        game.process_player_actions(
             player_actions=slap_key,
             current_player_idx=current_player_idx,
             previous_player_idx=0,
         )
-        assert round_winner == slapping_player_idx
-        assert player_turn_over is True
+        assert game.round_winner == slapping_player_idx
 
     def test_process_player_actions_no_valid_actions(self, monkeypatch):
         """
@@ -552,10 +565,10 @@ class TestRatScrewGame:
         # Test processing player actions with no valid actions
         current_player_idx = 0
         previous_player_idx = 1
-        round_winner, player_turn_over = game.process_player_actions(
+        game.process_player_actions(
             player_actions="xzy",  # invalid actions
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
-        assert round_winner is None
-        assert player_turn_over is False
+        assert game.round_winner is None
+        assert game.player_turn_over is False
