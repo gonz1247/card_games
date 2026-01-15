@@ -30,6 +30,7 @@ class Game:
         self._round_stack = RoundCardStack()
         self._game_winner = None
         self._round_winner = None
+        self._won_by_slap = False
         self._player_turn_over = False
 
     @property
@@ -166,6 +167,7 @@ class Game:
         previous_player = None
         current_player = starting_player
         self._round_winner = None
+        self._won_by_slap = False
         self._player_turn_over = False
         while self._round_winner is None:
             # Check to see if current player's turn is over
@@ -186,9 +188,16 @@ class Game:
                 player_actions, current_player, previous_player
             )
 
-        # Award round stack to round winner (get all penalty and played cards)
+        # Award round stack to round winner
         print(f"Player #{self._round_winner+1} has won the round!")
-        self._players[self._round_winner].take_round_stack(self._round_stack)
+        if self._won_by_slap:
+            self._players[self._round_winner].take_round_stack(self._round_stack)
+        else:
+            print("Use either action key to collect cards.")
+            cards_collected = False
+            while not cards_collected:
+                player_actions = input(f"P#{self._round_winner+1}> ")
+                cards_collected = self._process_player_card_pickup(player_actions)
 
     def _check_for_winner(self) -> None:
         """
@@ -242,7 +251,7 @@ class Game:
             Index of previous player
         """
         play_once_checker = set()
-        # Placeholder logic for processing actions
+        # Iterate through player actions
         for key in player_actions:
             # Ensure each key is only processed once per turn
             if key in play_once_checker:
@@ -311,6 +320,7 @@ class Game:
         if self._round_stack.is_valid_slap():
             print(f"Player #{slapping_player_idx+1} made a valid slap!")
             self._round_winner = slapping_player_idx
+            self._won_by_slap = True
             return
         # Process an invalid slap
         print(f"Player #{slapping_player_idx+1} made an invalid slap!")
@@ -326,3 +336,51 @@ class Game:
             self._player_turn_over = (
                 self._players[current_player_idx].card_stack.nCards < 1
             )
+
+    def _process_player_card_pickup(self, player_actions: str) -> bool:
+        """
+        Update game state parameters based on picking up cards after a round
+
+        Parameters
+        ----------
+        player_actions: str
+            String of player actions input
+
+        Returns
+        ----------
+        Boolean indicating if round stack was picked up or not by someone
+        """
+        cards_picked_up = False
+        round_winner = self._players[self._round_winner]
+        play_once_checker = set()
+        # Iterate through player actions
+        for key in player_actions:
+            # Ensure each key is only processed once per turn
+            if key in play_once_checker:
+                continue
+            play_once_checker.add(key)
+            if key == round_winner.play_key or key == round_winner.slap_key:
+                # round winner picked up the cards so stop processing
+                cards_picked_up = True
+                break
+            elif key in self._slap_keys:
+                # Process a slap
+                slapping_player_idx = self._slap_keys[key]
+                if self._round_stack.is_valid_slap():
+                    print(f"Player #{slapping_player_idx+1} made a valid slap!")
+                    self._round_winner = slapping_player_idx
+                    self._won_by_slap = True
+                    cards_picked_up = True
+                    break
+                else:
+                    # Penality slap
+                    print(f"Player #{slapping_player_idx+1} made an invalid slap!")
+                    self._round_stack.add_penalty_card(
+                        self._players[slapping_player_idx].play_card()
+                    )
+        # Give cards to round winner (either from pickup up cards or slapping stack)
+        if cards_picked_up:
+            self._players[self._round_winner].take_round_stack(self._round_stack)
+            return True
+        else:
+            return False

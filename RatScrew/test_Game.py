@@ -114,7 +114,7 @@ class TestGame:
 
     def test_setup_game_with_valid_number_of_players(self, monkeypatch):
         """
-        Test setup_game method of Game with a valid number of players.
+        Test _setup_game method of Game with a valid number of players.
         """
         game = Game()
         n_players = 3
@@ -142,7 +142,7 @@ class TestGame:
 
     def test_check_for_winner(self, monkeypatch):
         """
-        Test check_for_winner method of Game.
+        Test _check_for_winner method of Game.
         """
         game = Game()
         n_players = 3
@@ -190,7 +190,7 @@ class TestGame:
 
     def test_play_round(self, monkeypatch):
         """
-        Test play_round method of Game.
+        Test _play_round method of Game.
         """
         game = Game()
         n_players = 2
@@ -212,7 +212,7 @@ class TestGame:
         game._round_stack.add_penalty_card(Card("7", "clubs"))
 
         # Patch the built-in 'input' function to force a sequence of plays
-        user_inputs = iter(["a", "c", "a"])
+        user_inputs = iter(["a", "c", "a", "c"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         # Play round where second player loses since they cannot play a face card
@@ -225,7 +225,7 @@ class TestGame:
 
     def test_play_round_game_winner(self, monkeypatch):
         """
-        Test play_round method of Game when a player wins the game which forces the round to end.
+        Test _play_round method of Game when a player wins the game which forces the round to end.
         """
         game = Game()
         n_players = 2
@@ -244,12 +244,40 @@ class TestGame:
         game._players[losing_player].card_stack.add_card(Card("7", "spades"))
 
         # Patch the built-in 'input' function to force a sequence of plays
-        user_inputs = iter(["a", "c", "a"])
+        user_inputs = iter(["a", "c", "a", "a"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         # Play round where second player loses since they cannot play a face card
         game._play_round(starting_player)
         assert game._round_winner == starting_player
+
+    def test_play_round_slap(self, monkeypatch):
+        """
+        Test _play_round method of Game when a player wins the round by slapping the stack.
+        """
+        game = Game()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Setup cards for players so that can test round play
+        starting_player = 0
+        winning_player = 1
+        game._players[starting_player].card_stack = CardDeck(nDecks=0)
+        game._players[starting_player].card_stack.add_card(Card("7", "hearts"))
+        game._players[starting_player].card_stack.add_card(Card("ace", "diamonds"))
+        game._players[winning_player].card_stack = CardDeck(nDecks=0)
+        game._players[winning_player].card_stack.add_card(Card("7", "spades"))
+
+        # Patch the built-in 'input' function to force a sequence of plays
+        user_inputs = iter(["a", "c", "d"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+
+        # Play round where second player loses since they cannot play a face card
+        game._play_round(starting_player)
+        assert game._round_winner == winning_player
 
     def test_get_next_elgible_player(self, monkeypatch):
         """
@@ -296,7 +324,7 @@ class TestGame:
 
     def test_process_playing_card_lost_round(self, monkeypatch):
         """
-        Test process_playing_card method of Game when the player loses the round.
+        Test _process_playing_card method of Game when the player loses the round.
         """
         game = Game()
         n_players = 2
@@ -325,7 +353,7 @@ class TestGame:
 
     def test_process_playing_card_face_card_played(self, monkeypatch):
         """
-        Test process_playing_card method of Game when a face card is played.
+        Test _process_playing_card method of Game when a face card is played.
         """
         game = Game()
         n_players = 2
@@ -354,7 +382,7 @@ class TestGame:
 
     def test_process_playing_card_turn_still_going(self, monkeypatch):
         """
-        Test process_playing_card method of Game when the current player can continue playing.
+        Test _process_playing_card method of Game when the current player can continue playing.
         """
         game = Game()
         n_players = 2
@@ -384,7 +412,7 @@ class TestGame:
 
     def test_process_slapping_stack_valid_slap(self, monkeypatch):
         """
-        Test process_slapping_stack method of Game when it's a valid slap.
+        Test _process_slapping_stack method of Game when it's a valid slap.
         """
         game = Game()
         n_players = 2
@@ -408,7 +436,7 @@ class TestGame:
 
     def test_process_slapping_stack_invalid_slap_no_cards(self, monkeypatch):
         """
-        Test process_slapping_stack method of Game when an invalid slap is done by a player with no cards.
+        Test _process_slapping_stack method of Game when an invalid slap is done by a player with no cards.
         """
         game = Game()
         n_players = 2
@@ -435,7 +463,7 @@ class TestGame:
 
     def test_process_slapping_stack_invalid_slap_with_cards(self, monkeypatch):
         """
-        Test process_slapping_stack method of Game when an invalid slap is done by a player with cards.
+        Test _process_slapping_stack method of Game when an invalid slap is done by a player with cards.
         """
         game = Game()
         n_players = 2
@@ -469,7 +497,7 @@ class TestGame:
 
     def test_process_slapping_stack_invalid_slap_by_current_player(self, monkeypatch):
         """
-        Test process_slapping_stack method of Game when an invalid slap is done by the current player.
+        Test _process_slapping_stack method of Game when an invalid slap is done by the current player.
         """
         game = Game()
         n_players = 2
@@ -496,7 +524,7 @@ class TestGame:
 
     def test_process_player_actions_card_played(self, monkeypatch):
         """
-        Test process_player_actions method of Game when a card is played.
+        Test _process_player_actions method of Game when a card is played.
         """
         game = Game()
         n_players = 2
@@ -528,7 +556,7 @@ class TestGame:
 
     def test_process_player_actions_stack_slapped_multiple_attempts(self, monkeypatch):
         """
-        Test process_player_actions method of Game when attempted to be slapped multiple times by one person.
+        Test _process_player_actions method of Game when attempted to be slapped multiple times by one person.
         """
         game = Game()
         n_players = 2
@@ -566,7 +594,7 @@ class TestGame:
 
     def test_process_player_actions_stack_slapped_successfully(self, monkeypatch):
         """
-        Test process_player_actions method of Game when the stack is slapped successfully and won.
+        Test _process_player_actions method of Game when the stack is slapped successfully and won.
         """
         game = Game()
         n_players = 2
@@ -592,7 +620,7 @@ class TestGame:
 
     def test_process_player_actions_no_valid_actions(self, monkeypatch):
         """
-        Test process_player_actions method of Game when no valid actions are provided.
+        Test _process_player_actions method of Game when no valid actions are provided.
         """
         game = Game()
         n_players = 2
@@ -611,3 +639,103 @@ class TestGame:
         )
         assert game._round_winner is None
         assert game._player_turn_over is False
+
+    def test_process_player_card_pickup(self, monkeypatch):
+        """
+        Test _process_player_card_pickup method of Game.
+        """
+        game = Game()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        play_card_key = "a"
+        user_inputs = iter([str(n_players), play_card_key, "b", "c", "d"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Setup winner to have no cards
+        winner_idx = 0
+        game._players[winner_idx].card_stack = CardDeck(nDecks=0)
+
+        # Setup round stack that was just won
+        game._round_stack.played_card_stack.add_card(Card("jack", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("6", "spades"))
+
+        # Test processing player actions
+        game._round_winner = winner_idx
+        cardpick_status = game._process_player_card_pickup(play_card_key)
+        assert cardpick_status == True
+        assert game._players[winner_idx].card_stack.nCards == 2
+
+    def test_process_player_card_pickup_penality_slaps_only(self, monkeypatch):
+        """
+        Test _process_player_card_pickup method of Game when only penality slaps are done and cards are not picked up.
+        """
+        game = Game()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        penality_slap_key = "d"
+        user_inputs = iter([str(n_players), "a", "b", "c", penality_slap_key])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Setup winner to have no cards
+        winner_idx = 0
+        game._players[winner_idx].card_stack = CardDeck(nDecks=0)
+
+        # Setup round stack that cannot be slapped
+        game._round_stack.played_card_stack.add_card(Card("jack", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("6", "spades"))
+
+        # Test processing player actions
+        game._round_winner = winner_idx
+        cardpick_status = game._process_player_card_pickup(penality_slap_key)
+        assert cardpick_status == False
+        assert game._players[winner_idx].card_stack.nCards == 0
+        assert game._round_stack.penalty_card_stack.nCards == 1
+
+    def test_process_player_card_pickup_random_keys(self, monkeypatch):
+        """
+        Test _process_player_card_pickup method of Game when series of random keys are inputted.
+        """
+        game = Game()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Test processing player actions
+        game._round_winner = 0
+        cardpick_status = game._process_player_card_pickup("efeeg")
+        assert cardpick_status == False
+
+    def test_process_player_card_pickup_slap_steal(self, monkeypatch):
+        """
+        Test _process_player_card_pickup method of Game when card stack is stolen by a slap.
+        """
+        game = Game()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        steal_slap_key = "d"
+        user_inputs = iter([str(n_players), "a", "b", "c", steal_slap_key])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Setup initial winner with no cards
+        loser_idx = 0
+        game._players[loser_idx].card_stack = CardDeck(nDecks=0)
+
+        # Setup stealer to have no cards
+        winner_idx = 1
+        game._players[winner_idx].card_stack = CardDeck(nDecks=0)
+
+        # Setup round stack that can be slapped
+        game._round_stack.played_card_stack.add_card(Card("jack", "hearts"))
+        game._round_stack.played_card_stack.add_card(Card("jack", "spades"))
+
+        # Test processing player actions
+        game._round_winner = loser_idx
+        cardpick_status = game._process_player_card_pickup(steal_slap_key)
+        assert cardpick_status == True
+        assert game._players[winner_idx].card_stack.nCards == 2
+        assert game._players[loser_idx].card_stack.nCards == 0
