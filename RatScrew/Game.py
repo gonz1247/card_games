@@ -184,7 +184,7 @@ class Game:
             player_actions = input(f"P#{current_player+1}> ")
 
             # Process player actions and update game state
-            self._process_player_actions(
+            self._process_mid_round_actions(
                 player_actions, current_player, previous_player
             )
 
@@ -197,7 +197,7 @@ class Game:
             cards_collected = False
             while not cards_collected:
                 player_actions = input(f"P#{self._round_winner+1}> ")
-                cards_collected = self._process_player_card_pickup(player_actions)
+                cards_collected = self._process_round_end_actions(player_actions)
 
     def _check_for_winner(self) -> None:
         """
@@ -232,14 +232,14 @@ class Game:
                 break
         return next_player_idx
 
-    def _process_player_actions(
+    def _process_mid_round_actions(
         self,
         player_actions: str,
         current_player_idx: int,
         previous_player_idx: int,
     ) -> None:
         """
-        Update game state parameters based on player actions
+        Update game state parameters based on player actions during an active round
 
         Parameters
         ----------
@@ -262,20 +262,24 @@ class Game:
                 key == self._players[current_player_idx].play_key
                 and not self._player_turn_over
             ):
-                self._process_playing_card(current_player_idx, previous_player_idx)
+                self._process_mid_round_playing_card(
+                    current_player_idx, previous_player_idx
+                )
                 # Stop processing other player actions since card has been played
                 break
             elif key in self._slap_keys:
                 slapping_player_idx = self._slap_keys[key]
-                self._process_slapping_stack(slapping_player_idx, current_player_idx)
+                self._process_mid_round_slapping(
+                    slapping_player_idx, current_player_idx
+                )
                 if self._round_winner is not None:
                     break
 
-    def _process_playing_card(
+    def _process_mid_round_playing_card(
         self, current_player_idx: int, previous_player_idx: int
     ) -> None:
         """
-        Update game state parameters based on current player playing card to round stack
+        Update game state parameters based on current player of active round playing card to round stack
 
         Parameters
         ----------
@@ -303,11 +307,11 @@ class Game:
         else:
             self._round_winner = None
 
-    def _process_slapping_stack(
+    def _process_mid_round_slapping(
         self, slapping_player_idx: int, current_player_idx: int
     ) -> None:
         """
-        Update game state parameters based on player slapping round stack
+        Update game state parameters based on player slapping round stack during an active round
 
         Parameters
         ----------
@@ -337,9 +341,9 @@ class Game:
                 self._players[current_player_idx].card_stack.nCards < 1
             )
 
-    def _process_player_card_pickup(self, player_actions: str) -> bool:
+    def _process_round_end_actions(self, player_actions: str) -> bool:
         """
-        Update game state parameters based on picking up cards after a round
+        Update game state parameters based on actions at the end of round
 
         Parameters
         ----------
@@ -348,9 +352,9 @@ class Game:
 
         Returns
         ----------
-        Boolean indicating if round stack was picked up or not by someone
+        Boolean indicating if round stack was collected by someone
         """
-        cards_picked_up = False
+        stack_collected = False
         round_winner = self._players[self._round_winner]
         play_once_checker = set()
         # Iterate through player actions
@@ -359,18 +363,20 @@ class Game:
             if key in play_once_checker:
                 continue
             play_once_checker.add(key)
+            # Process round winner collecting round stack or other players slapping the stack
             if key == round_winner.play_key or key == round_winner.slap_key:
-                # round winner picked up the cards so stop processing
-                cards_picked_up = True
+                # round winner collected round stack so stop processing
+                stack_collected = True
                 break
             elif key in self._slap_keys:
                 # Process a slap
                 slapping_player_idx = self._slap_keys[key]
                 if self._round_stack.is_valid_slap():
+                    # Stole round stack with a valid slap
                     print(f"Player #{slapping_player_idx+1} made a valid slap!")
                     self._round_winner = slapping_player_idx
                     self._won_by_slap = True
-                    cards_picked_up = True
+                    stack_collected = True
                     break
                 else:
                     # Penality slap
@@ -379,7 +385,7 @@ class Game:
                         self._players[slapping_player_idx].play_card()
                     )
         # Give cards to round winner (either from pickup up cards or slapping stack)
-        if cards_picked_up:
+        if stack_collected:
             self._players[self._round_winner].take_round_stack(self._round_stack)
             return True
         else:
