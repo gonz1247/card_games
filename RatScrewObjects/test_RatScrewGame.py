@@ -57,6 +57,17 @@ class TestRatScrewGame:
         assert game._round_winner is None
         assert game._player_turn_over == False
 
+    def test_game_winner(self):
+        """
+        Test game_winner attribute property and setter
+        """
+        game = RatScrewGame()
+        random_val = 5
+        game._game_winner = random_val
+        assert game.game_winner == random_val
+        with pytest.raises(AttributeError):
+            game.game_winner = random_val
+
     def test_print_rules(self):
         """
         Provide test coverage for print_rules method of RatScrewGame
@@ -190,26 +201,55 @@ class TestRatScrewGame:
 
         # Setup cards for players so that can test round play
         starting_player = 0
-        losing_player = 1
+        winning_player = 1
         game._players[starting_player].card_stack = CardDeck(nDecks=0)
-        game._players[starting_player].card_stack.add_card(Card("jack", "hearts"))
-        game._players[losing_player].card_stack = CardDeck(nDecks=0)
-        game._players[losing_player].card_stack.add_card(Card("3", "spades"))
+        game._players[starting_player].card_stack.add_card(Card("3", "hearts"))
+        game._players[starting_player].card_stack.add_card(Card("10", "diamonds"))
+        game._players[winning_player].card_stack = CardDeck(nDecks=0)
+        game._players[winning_player].card_stack.add_card(Card("jack", "spades"))
 
         # Add a card to the penalty stack
         game._round_stack.add_penalty_card(Card("7", "clubs"))
 
         # Patch the built-in 'input' function to force a sequence of plays
-        user_inputs = iter(["a", "c"])
+        user_inputs = iter(["a", "c", "a"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+
+        # Play round where second player loses since they cannot play a face card
+        game._play_round(starting_player)
+        assert game._round_winner == winning_player
+        assert game._players[winning_player].card_stack.nCards == 4
+        assert game._players[starting_player].card_stack.nCards == 0
+        assert game._round_stack.played_card_stack.nCards == 0
+        assert game._round_stack.penalty_card_stack.nCards == 0
+
+    def test_play_round_game_winner(self, monkeypatch):
+        """
+        Test play_round method of RatScrewGame when a player wins the game which forces the round to end.
+        """
+        game = RatScrewGame()
+        n_players = 2
+        # Patch the built-in 'input' function to provide unique keys for each player
+        user_inputs = iter([str(n_players), "a", "b", "c", "d"])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+        game._setup_game()
+
+        # Setup cards for players so that can test round play
+        starting_player = 0
+        losing_player = 1
+        game._players[starting_player].card_stack = CardDeck(nDecks=0)
+        game._players[starting_player].card_stack.add_card(Card("3", "hearts"))
+        game._players[starting_player].card_stack.add_card(Card("10", "diamonds"))
+        game._players[losing_player].card_stack = CardDeck(nDecks=0)
+        game._players[losing_player].card_stack.add_card(Card("7", "spades"))
+
+        # Patch the built-in 'input' function to force a sequence of plays
+        user_inputs = iter(["a", "c", "a"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         # Play round where second player loses since they cannot play a face card
         game._play_round(starting_player)
         assert game._round_winner == starting_player
-        assert game._players[starting_player].card_stack.nCards == 3
-        assert game._players[losing_player].card_stack.nCards == 0
-        assert game._round_stack.played_card_stack.nCards == 0
-        assert game._round_stack.penalty_card_stack.nCards == 0
 
     def test_get_next_elgible_player(self, monkeypatch):
         """

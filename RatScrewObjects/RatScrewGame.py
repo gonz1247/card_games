@@ -173,6 +173,10 @@ class RatScrewGame:
                 previous_player = current_player
                 current_player = self._get_next_elgible_player(current_player)
                 self._player_turn_over = False
+                if current_player == previous_player:
+                    # no other players have cards so current player wins the round (and game)
+                    self._round_winner = current_player
+                    break
 
             # await player action(s)
             player_actions = input(f"P#{current_player+1}> ")
