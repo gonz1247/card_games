@@ -1,15 +1,15 @@
-from CardDeckObjects import CardDeck, Card
-from RatScrewObjects.RoundCardStack import RoundCardStack
+from CardDeck import CardDeck, Card
+from RatScrew.RoundCardStack import RoundCardStack
 
 
-class RatScrewPlayer:
+class Player:
     """
-    Manage player state of participant in Rat Screw Game
+    Manage player state of participant in game of rat screw
     """
 
     def __init__(self, invalid_action_keys: set = None) -> None:
         """
-        Intialize RatScrewPlayer instance and set desired keys for actions
+        Intialize Player instance and set desired keys for actions
         """
         if invalid_action_keys is None:
             invalid_action_keys = set()

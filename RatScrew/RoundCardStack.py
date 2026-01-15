@@ -1,4 +1,4 @@
-from CardDeckObjects import Card, CardDeck
+from CardDeck import Card, CardDeck
 
 
 class RoundCardStack:

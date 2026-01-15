@@ -1,12 +1,12 @@
 import pytest
 
-from CardDeckObjects import Card, CardDeck
-from RatScrewObjects.RoundCardStack import RoundCardStack
-from RatScrewObjects.RatScrewPlayer import RatScrewPlayer
+from CardDeck import Card, CardDeck
+from RatScrew.RoundCardStack import RoundCardStack
+from RatScrew.Player import Player
 
 
-class MockRatScrewPlayer(RatScrewPlayer):
-    """Mock class of RatScrewPlayer that can directly set play and slap keys"""
+class MockPlayer(Player):
+    """Mock class of Player that can directly set play and slap keys"""
 
     def __init__(self, play_key="a", slap_key="b"):
         self._play_key = play_key
@@ -14,34 +14,34 @@ class MockRatScrewPlayer(RatScrewPlayer):
         self.card_stack = CardDeck(nDecks=0)
 
 
-class TestRatScrewPlayer:
+class TestPlayer:
     """
-    Test functionality of RatScrewPlayer class.
+    Test functionality of Player class.
     """
 
     def test_is_valid_action_key_with_no_constraints(self):
         """
-        Test is_valid_action_key static method of RatScrewPlayer when constraints are not applied for which keys are invalid.
+        Test is_valid_action_key static method of Player when constraints are not applied for which keys are invalid.
         """
         # Test with no constraints on which keys are invalid
-        assert RatScrewPlayer._is_valid_action_key("a") is True
-        assert RatScrewPlayer._is_valid_action_key("ab") is False
+        assert Player._is_valid_action_key("a") is True
+        assert Player._is_valid_action_key("ab") is False
 
     def test_is_valid_action_key_with_constraints(self):
         """
-        Test is_valid_action_key static method of RatScrewPlayer when constraints are applied for which keys are invalid.
+        Test is_valid_action_key static method of Player when constraints are applied for which keys are invalid.
         """
 
         # Test with constraints on which keys are invalid
         invalid_keys = {"x", "y", "z"}
-        assert RatScrewPlayer._is_valid_action_key("x", invalid_keys) is False
-        assert RatScrewPlayer._is_valid_action_key("a", invalid_keys) is True
-        assert RatScrewPlayer._is_valid_action_key("yz", invalid_keys) is False
-        assert RatScrewPlayer._is_valid_action_key("bc", invalid_keys) is False
+        assert Player._is_valid_action_key("x", invalid_keys) is False
+        assert Player._is_valid_action_key("a", invalid_keys) is True
+        assert Player._is_valid_action_key("yz", invalid_keys) is False
+        assert Player._is_valid_action_key("bc", invalid_keys) is False
 
     def test_init(self, monkeypatch, invalid_action_keys=None):
         """
-        Test initialization of RatScrewPlayer.
+        Test initialization of Player.
         """
 
         # sequence of user inputs for play and slap keys, invalid input followed by valid input
@@ -52,14 +52,14 @@ class TestRatScrewPlayer:
 
         # Patch the built-in 'input' function to use the iterator
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-        player = RatScrewPlayer(invalid_action_keys)
+        player = Player(invalid_action_keys)
         assert player.play_key == play_key
         assert player.slap_key == slap_key
         assert player.card_stack.nCards == 0
 
     def test_init_with_existing_invalid_keys(self, monkeypatch):
         """
-        Add test coverage for initialization of RatScrewPlayer with existing invalid action keys.
+        Add test coverage for initialization of Player with existing invalid action keys.
         """
         # pre-existing invalid keys that will be checked against during initialization
         existing_invalid_keys = {"x", "y", "z"}
@@ -71,7 +71,7 @@ class TestRatScrewPlayer:
         Test play_key attribute property and setter
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         random_val = "a"
         player._play_key = random_val
         assert player.play_key == random_val
@@ -83,7 +83,7 @@ class TestRatScrewPlayer:
         Test slap_key attribute property and setter
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         random_val = "a"
         player._slap_key = random_val
         assert player.slap_key == random_val
@@ -95,7 +95,7 @@ class TestRatScrewPlayer:
         Test card_stack attribute property and setter
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         random_deck = CardDeck()
         not_a_deck = True
         player.card_stack = random_deck
@@ -108,7 +108,7 @@ class TestRatScrewPlayer:
         Test playing a card when player has no cards.
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         with pytest.raises(IndexError):
             player.play_card()
 
@@ -117,7 +117,7 @@ class TestRatScrewPlayer:
         Test playing a card when player has no cards.
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         expected_card = Card("5", "hearts")
         player.card_stack.add_card(expected_card)
         assert player.play_card() == expected_card
@@ -127,7 +127,7 @@ class TestRatScrewPlayer:
         Test take_round_stack method when invalid stack is inputted
         """
         # Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         not_a_card_stack = True
         with pytest.raises(TypeError):
             player.take_round_stack(not_a_card_stack)
@@ -143,7 +143,7 @@ class TestRatScrewPlayer:
 
         # Add cards to player stack and round staack
         ## Use mock class since play and slap keys set don't matter
-        player = MockRatScrewPlayer()
+        player = MockPlayer()
         player.card_stack.add_card(last_card)
         round_stack = RoundCardStack()
         round_stack.add_played_card(played_card)

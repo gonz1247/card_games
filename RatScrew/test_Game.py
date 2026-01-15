@@ -1,12 +1,12 @@
 import pytest
-from CardDeckObjects import CardDeck, Card
-from RatScrewObjects.RatScrewGame import RatScrewGame
-from RatScrewObjects.RoundCardStack import RoundCardStack
+from CardDeck import CardDeck, Card
+from RatScrew.Game import Game
+from RatScrew.RoundCardStack import RoundCardStack
 
 
-class MockRatScrewGame(RatScrewGame):
+class MockGame(Game):
     """
-    Mock class of RatScrewGame so that play_game method can be tested
+    Mock class of Game so that play_game method can be tested
     """
 
     def _play_round(self, starting_player):
@@ -22,16 +22,16 @@ class MockRatScrewGame(RatScrewGame):
         self._game_winner = len(self._players) - 1
 
 
-class TestRatScrewGame:
+class TestGame:
     """
-    Test functionality of RatScrewGame class.
+    Test functionality of Game class.
     """
 
     def test_reset_game_parameters(self):
         """
-        Test reset_game_parameters method of RatScrewGame.
+        Test reset_game_parameters method of Game.
         """
-        game = RatScrewGame()
+        game = Game()
         # Modify game parameters to be set to something other than their default to ensure reset works
         game._play_keys = None
         game._slap_keys = None
@@ -61,7 +61,7 @@ class TestRatScrewGame:
         """
         Test game_winner attribute property and setter
         """
-        game = RatScrewGame()
+        game = Game()
         random_val = 5
         game._game_winner = random_val
         assert game.game_winner == random_val
@@ -70,21 +70,21 @@ class TestRatScrewGame:
 
     def test_print_rules(self):
         """
-        Provide test coverage for print_rules method of RatScrewGame
+        Provide test coverage for print_rules method of Game
         """
-        RatScrewGame().print_rules()
+        Game().print_rules()
 
     def test_print_controls_explanation(self):
         """
-        Provide test coverage for print_controls_explanation method of RatScrewGame
+        Provide test coverage for print_controls_explanation method of Game
         """
-        RatScrewGame().print_controls_explanation()
+        Game().print_controls_explanation()
 
     def test_ask_user_for_number_of_players_valid(self, monkeypatch):
         """
-        Test _ask_user_for_number_of_players method of RatScrewGame.
+        Test _ask_user_for_number_of_players method of Game.
         """
-        game = RatScrewGame()
+        game = Game()
 
         # sequence of user inputs: invalid input followed by valid input
         user_inputs = ["3"]
@@ -98,9 +98,9 @@ class TestRatScrewGame:
 
     def test_ask_user_for_number_of_players_invalid(self, monkeypatch):
         """
-        Test _ask_user_for_number_of_players method of RatScrewGame when too many or too few players are provided.
+        Test _ask_user_for_number_of_players method of Game when too many or too few players are provided.
         """
-        game = RatScrewGame()
+        game = Game()
 
         # sequence of user inputs: input non pos integer, input too many players, input too few players, input valid number of player
         user_inputs = ["foo", str(game._MAX_PLAYERS + 1), "1", "2"]
@@ -114,9 +114,9 @@ class TestRatScrewGame:
 
     def test_setup_game_with_valid_number_of_players(self, monkeypatch):
         """
-        Test setup_game method of RatScrewGame with a valid number of players.
+        Test setup_game method of Game with a valid number of players.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 3
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f"])
@@ -142,9 +142,9 @@ class TestRatScrewGame:
 
     def test_check_for_winner(self, monkeypatch):
         """
-        Test check_for_winner method of RatScrewGame.
+        Test check_for_winner method of Game.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 3
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f"])
@@ -169,10 +169,10 @@ class TestRatScrewGame:
 
     def test_play_game(self, monkeypatch):
         """
-        Provide test coverage for play_game method of RatScrewGame
+        Provide test coverage for play_game method of Game
         """
         # Use mock class so that play_game loop only runs a single time for the sake of test coverage
-        game = MockRatScrewGame()
+        game = MockGame()
         # Patch the built-in 'input' function to provide unique keys for each player and number of players
         user_inputs = iter(
             [
@@ -190,9 +190,9 @@ class TestRatScrewGame:
 
     def test_play_round(self, monkeypatch):
         """
-        Test play_round method of RatScrewGame.
+        Test play_round method of Game.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -225,9 +225,9 @@ class TestRatScrewGame:
 
     def test_play_round_game_winner(self, monkeypatch):
         """
-        Test play_round method of RatScrewGame when a player wins the game which forces the round to end.
+        Test play_round method of Game when a player wins the game which forces the round to end.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -253,9 +253,9 @@ class TestRatScrewGame:
 
     def test_get_next_elgible_player(self, monkeypatch):
         """
-        Test _get_next_elgible_player method of RatScrewGame.
+        Test _get_next_elgible_player method of Game.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 4
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f", "g", "h"])
@@ -276,9 +276,9 @@ class TestRatScrewGame:
 
     def test_get_next_elgible_player_all_players_out(self, monkeypatch):
         """
-        Test _get_next_elgible_player method of RatScrewGame when all players have no cards.
+        Test _get_next_elgible_player method of Game when all players have no cards.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 4
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d", "e", "f", "g", "h"])
@@ -296,9 +296,9 @@ class TestRatScrewGame:
 
     def test_process_playing_card_lost_round(self, monkeypatch):
         """
-        Test process_playing_card method of RatScrewGame when the player loses the round.
+        Test process_playing_card method of Game when the player loses the round.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -325,9 +325,9 @@ class TestRatScrewGame:
 
     def test_process_playing_card_face_card_played(self, monkeypatch):
         """
-        Test process_playing_card method of RatScrewGame when a face card is played.
+        Test process_playing_card method of Game when a face card is played.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -354,9 +354,9 @@ class TestRatScrewGame:
 
     def test_process_playing_card_turn_still_going(self, monkeypatch):
         """
-        Test process_playing_card method of RatScrewGame when the current player can continue playing.
+        Test process_playing_card method of Game when the current player can continue playing.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -384,9 +384,9 @@ class TestRatScrewGame:
 
     def test_process_slapping_stack_valid_slap(self, monkeypatch):
         """
-        Test process_slapping_stack method of RatScrewGame when it's a valid slap.
+        Test process_slapping_stack method of Game when it's a valid slap.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -408,9 +408,9 @@ class TestRatScrewGame:
 
     def test_process_slapping_stack_invalid_slap_no_cards(self, monkeypatch):
         """
-        Test process_slapping_stack method of RatScrewGame when an invalid slap is done by a player with no cards.
+        Test process_slapping_stack method of Game when an invalid slap is done by a player with no cards.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -435,9 +435,9 @@ class TestRatScrewGame:
 
     def test_process_slapping_stack_invalid_slap_with_cards(self, monkeypatch):
         """
-        Test process_slapping_stack method of RatScrewGame when an invalid slap is done by a player with cards.
+        Test process_slapping_stack method of Game when an invalid slap is done by a player with cards.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -469,9 +469,9 @@ class TestRatScrewGame:
 
     def test_process_slapping_stack_invalid_slap_by_current_player(self, monkeypatch):
         """
-        Test process_slapping_stack method of RatScrewGame when an invalid slap is done by the current player.
+        Test process_slapping_stack method of Game when an invalid slap is done by the current player.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
@@ -496,9 +496,9 @@ class TestRatScrewGame:
 
     def test_process_player_actions_card_played(self, monkeypatch):
         """
-        Test process_player_actions method of RatScrewGame when a card is played.
+        Test process_player_actions method of Game when a card is played.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         play_card_key = "a"
@@ -528,9 +528,9 @@ class TestRatScrewGame:
 
     def test_process_player_actions_stack_slapped_multiple_attempts(self, monkeypatch):
         """
-        Test process_player_actions method of RatScrewGame when attempted to be slapped multiple times by one person.
+        Test process_player_actions method of Game when attempted to be slapped multiple times by one person.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         slap_key = "b"
@@ -566,9 +566,9 @@ class TestRatScrewGame:
 
     def test_process_player_actions_stack_slapped_successfully(self, monkeypatch):
         """
-        Test process_player_actions method of RatScrewGame when the stack is slapped successfully and won.
+        Test process_player_actions method of Game when the stack is slapped successfully and won.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         slap_key = "b"
@@ -592,9 +592,9 @@ class TestRatScrewGame:
 
     def test_process_player_actions_no_valid_actions(self, monkeypatch):
         """
-        Test process_player_actions method of RatScrewGame when no valid actions are provided.
+        Test process_player_actions method of Game when no valid actions are provided.
         """
-        game = RatScrewGame()
+        game = Game()
         n_players = 2
         # Patch the built-in 'input' function to provide unique keys for each player
         user_inputs = iter([str(n_players), "a", "b", "c", "d"])
