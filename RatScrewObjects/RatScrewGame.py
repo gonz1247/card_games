@@ -99,7 +99,7 @@ class RatScrewGame:
             self._play_round(starting_player=self._round_winner)
             # check if someone won after round
             self._check_for_winner()
-        print(f"Player #{self.game_winner} has won the game!")
+        print(f"Player #{self.game_winner+1} has won the game!")
 
     def _ask_user_for_number_of_players(self) -> int:
         """
@@ -134,7 +134,7 @@ class RatScrewGame:
             self._round_stack.add_penalty_card(fresh_deck.deal_card())
         # initialize each player with stack of cards and action keys assigned
         for p_idx, p_card_stack in enumerate(initial_card_stacks):
-            print(f"Setting up player #{p_idx}")
+            print(f"Setting up player #{p_idx+1}")
             # intialize player
             p = RatScrewPlayer(
                 invalid_action_keys=(self._play_keys.keys() | self._slap_keys.keys())
@@ -160,9 +160,9 @@ class RatScrewGame:
         # Show current card counts and controls for each player
         for p_idx, p in enumerate(self._players):
             print(
-                f"Player #{p_idx} has {p.card_stack.nCards} cards. Play key: '{p.play_key}', Slap key: '{p.slap_key}'"
+                f"Player #{p_idx+1} has {p.card_stack.nCards} cards. Play key: '{p.play_key}', Slap key: '{p.slap_key}'"
             )
-        print(f"Player #{starting_player} goes first.")
+        print(f"Player #{starting_player+1} goes first.")
         previous_player = None
         current_player = starting_player
         self._round_winner = None
@@ -175,7 +175,7 @@ class RatScrewGame:
                 self._player_turn_over = False
 
             # await player action(s)
-            player_actions = input(f"P#{current_player}> ")
+            player_actions = input(f"P#{current_player+1}> ")
 
             # Process player actions and update game state
             self._process_player_actions(
@@ -183,7 +183,7 @@ class RatScrewGame:
             )
 
         # Award round stack to round winner (get all penalty and played cards)
-        print(f"Player #{self._round_winner} has won the round!")
+        print(f"Player #{self._round_winner+1} has won the round!")
         self._players[self._round_winner].take_round_stack(self._round_stack)
 
     def _check_for_winner(self) -> None:
@@ -305,11 +305,11 @@ class RatScrewGame:
         """
         # Check if slap is valid and round was won
         if self._round_stack.is_valid_slap():
-            print(f"Player #{slapping_player_idx} made a valid slap!")
+            print(f"Player #{slapping_player_idx+1} made a valid slap!")
             self._round_winner = slapping_player_idx
             return
         # Process an invalid slap
-        print(f"Player #{slapping_player_idx} made an invalid slap!")
+        print(f"Player #{slapping_player_idx+1} made an invalid slap!")
         # If slapper has no cards, they cannot pay penalty
         if self._players[slapping_player_idx].card_stack.nCards < 1:
             return
