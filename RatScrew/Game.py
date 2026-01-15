@@ -1,9 +1,9 @@
-from CardDeckObjects import CardDeck
-from RatScrewObjects.RoundCardStack import RoundCardStack
-from RatScrewObjects.RatScrewPlayer import RatScrewPlayer
+from CardDeck import CardDeck
+from RatScrew.RoundCardStack import RoundCardStack
+from RatScrew.Player import Player
 
 
-class RatScrewGame:
+class Game:
     """
     Class to run and manage gameplay state of Rat Screw card game
     """
@@ -14,7 +14,7 @@ class RatScrewGame:
 
     def __init__(self) -> None:
         """
-        Initialize instance of RatScrewGame
+        Initialize instance of Game
         """
         self.reset_game_parameters()
 
@@ -136,7 +136,7 @@ class RatScrewGame:
         for p_idx, p_card_stack in enumerate(initial_card_stacks):
             print(f"Setting up player #{p_idx+1}")
             # intialize player
-            p = RatScrewPlayer(
+            p = Player(
                 invalid_action_keys=(self._play_keys.keys() | self._slap_keys.keys())
             )
             # add action keys to dictionary to be able to reverse look up player index by their action keys

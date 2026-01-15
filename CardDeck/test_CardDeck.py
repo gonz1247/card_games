@@ -1,7 +1,7 @@
 import pytest
 
-from CardDeckObjects.CardDeck import CardDeck
-from CardDeckObjects.Card import Card
+from CardDeck.CardDeck import CardDeck
+from CardDeck.Card import Card
 
 
 class TestCardDeck:
