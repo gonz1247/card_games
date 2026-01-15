@@ -322,9 +322,9 @@ class TestGame:
             next_player = game._get_next_elgible_player(current_player_idx=idx)
             assert next_player == idx
 
-    def test_process_playing_card_lost_round(self, monkeypatch):
+    def test_process_mid_round_playing_card_lost_round(self, monkeypatch):
         """
-        Test _process_playing_card method of Game when the player loses the round.
+        Test _process_mid_round_playing_card method of Game when the player loses the round.
         """
         game = Game()
         n_players = 2
@@ -344,16 +344,16 @@ class TestGame:
 
         # Test playing a card
         previous_player_idx = 1
-        game._process_playing_card(
+        game._process_mid_round_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
         assert game._round_winner == previous_player_idx
         assert game._player_turn_over is True
 
-    def test_process_playing_card_face_card_played(self, monkeypatch):
+    def test_process_mid_round_playing_card_face_card_played(self, monkeypatch):
         """
-        Test _process_playing_card method of Game when a face card is played.
+        Test _process_mid_round_playing_card method of Game when a face card is played.
         """
         game = Game()
         n_players = 2
@@ -373,16 +373,16 @@ class TestGame:
 
         # Test playing a card
         previous_player_idx = 1
-        game._process_playing_card(
+        game._process_mid_round_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
         assert game._round_winner is None  # no one should win the round
         assert game._player_turn_over is True  # since they played a face card
 
-    def test_process_playing_card_turn_still_going(self, monkeypatch):
+    def test_process_mid_round_playing_card_turn_still_going(self, monkeypatch):
         """
-        Test _process_playing_card method of Game when the current player can continue playing.
+        Test _process_mid_round_playing_card method of Game when the current player can continue playing.
         """
         game = Game()
         n_players = 2
@@ -403,16 +403,16 @@ class TestGame:
 
         # Test playing a card
         previous_player_idx = 1
-        game._process_playing_card(
+        game._process_mid_round_playing_card(
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
         )
         assert game._round_winner is None  # player can still play
         assert game._player_turn_over is False  # since countdown has not reached zero
 
-    def test_process_slapping_stack_valid_slap(self, monkeypatch):
+    def test_process_mid_round_slapping_valid_slap(self, monkeypatch):
         """
-        Test _process_slapping_stack method of Game when it's a valid slap.
+        Test _process_mid_round_slapping method of Game when it's a valid slap.
         """
         game = Game()
         n_players = 2
@@ -428,15 +428,15 @@ class TestGame:
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        game._process_slapping_stack(
+        game._process_mid_round_slapping(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
         assert game._round_winner == slapping_player_idx
 
-    def test_process_slapping_stack_invalid_slap_no_cards(self, monkeypatch):
+    def test_process_mid_round_slapping_invalid_slap_no_cards(self, monkeypatch):
         """
-        Test _process_slapping_stack method of Game when an invalid slap is done by a player with no cards.
+        Test _process_mid_round_slapping method of Game when an invalid slap is done by a player with no cards.
         """
         game = Game()
         n_players = 2
@@ -455,15 +455,15 @@ class TestGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        game._process_slapping_stack(
+        game._process_mid_round_slapping(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
         assert game._round_winner is None
 
-    def test_process_slapping_stack_invalid_slap_with_cards(self, monkeypatch):
+    def test_process_mid_round_slapping_invalid_slap_with_cards(self, monkeypatch):
         """
-        Test _process_slapping_stack method of Game when an invalid slap is done by a player with cards.
+        Test _process_mid_round_slapping method of Game when an invalid slap is done by a player with cards.
         """
         game = Game()
         n_players = 2
@@ -486,7 +486,7 @@ class TestGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        game._process_slapping_stack(
+        game._process_mid_round_slapping(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=current_player_idx,
         )
@@ -495,9 +495,11 @@ class TestGame:
             == expected_cards_after_penalty
         )
 
-    def test_process_slapping_stack_invalid_slap_by_current_player(self, monkeypatch):
+    def test_process_mid_round_slapping_invalid_slap_by_current_player(
+        self, monkeypatch
+    ):
         """
-        Test _process_slapping_stack method of Game when an invalid slap is done by the current player.
+        Test _process_mid_round_slapping method of Game when an invalid slap is done by the current player.
         """
         game = Game()
         n_players = 2
@@ -516,15 +518,15 @@ class TestGame:
         game._players[slapping_player_idx].card_stack.add_card(Card("9", "clubs"))
 
         # Test slapping the stack by the current player
-        game._process_slapping_stack(
+        game._process_mid_round_slapping(
             slapping_player_idx=slapping_player_idx,
             current_player_idx=slapping_player_idx,
         )
         assert game._player_turn_over is True
 
-    def test_process_player_actions_card_played(self, monkeypatch):
+    def test_process_mid_round_actions_card_played(self, monkeypatch):
         """
-        Test _process_player_actions method of Game when a card is played.
+        Test _process_mid_round_actions method of Game when a card is played.
         """
         game = Game()
         n_players = 2
@@ -542,7 +544,7 @@ class TestGame:
 
         # Test processing player actions
         previous_player_idx = 1
-        game._process_player_actions(
+        game._process_mid_round_actions(
             player_actions=play_card_key,
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
@@ -554,9 +556,11 @@ class TestGame:
         assert game._round_stack.penalty_card_stack.nCards == 0
         assert game._round_stack.played_card_stack.see_card(0) == played_card
 
-    def test_process_player_actions_stack_slapped_multiple_attempts(self, monkeypatch):
+    def test_process_mid_round_actions_stack_slapped_multiple_attempts(
+        self, monkeypatch
+    ):
         """
-        Test _process_player_actions method of Game when attempted to be slapped multiple times by one person.
+        Test _process_mid_round_actions method of Game when attempted to be slapped multiple times by one person.
         """
         game = Game()
         n_players = 2
@@ -578,7 +582,7 @@ class TestGame:
 
         # Test slapping the stack
         current_player_idx = 1
-        game._process_player_actions(
+        game._process_mid_round_actions(
             player_actions=slap_key * 3,  # multiple slap attempts
             current_player_idx=current_player_idx,
             previous_player_idx=0,
@@ -592,9 +596,9 @@ class TestGame:
         assert game._round_stack.played_card_stack.nCards == 2
         assert game._round_stack.penalty_card_stack.nCards == 1
 
-    def test_process_player_actions_stack_slapped_successfully(self, monkeypatch):
+    def test_process_mid_round_actions_stack_slapped_successfully(self, monkeypatch):
         """
-        Test _process_player_actions method of Game when the stack is slapped successfully and won.
+        Test _process_mid_round_actions method of Game when the stack is slapped successfully and won.
         """
         game = Game()
         n_players = 2
@@ -611,16 +615,16 @@ class TestGame:
         # Test slapping the stack
         slapping_player_idx = 0
         current_player_idx = 1
-        game._process_player_actions(
+        game._process_mid_round_actions(
             player_actions=slap_key,
             current_player_idx=current_player_idx,
             previous_player_idx=0,
         )
         assert game._round_winner == slapping_player_idx
 
-    def test_process_player_actions_no_valid_actions(self, monkeypatch):
+    def test_process_mid_round_actions_no_valid_actions(self, monkeypatch):
         """
-        Test _process_player_actions method of Game when no valid actions are provided.
+        Test _process_mid_round_actions method of Game when no valid actions are provided.
         """
         game = Game()
         n_players = 2
@@ -632,7 +636,7 @@ class TestGame:
         # Test processing player actions with no valid actions
         current_player_idx = 0
         previous_player_idx = 1
-        game._process_player_actions(
+        game._process_mid_round_actions(
             player_actions="xzy",  # invalid actions
             current_player_idx=current_player_idx,
             previous_player_idx=previous_player_idx,
@@ -640,9 +644,9 @@ class TestGame:
         assert game._round_winner is None
         assert game._player_turn_over is False
 
-    def test_process_player_card_pickup(self, monkeypatch):
+    def test_process_round_end_actions(self, monkeypatch):
         """
-        Test _process_player_card_pickup method of Game.
+        Test _process_round_end_actions method of Game.
         """
         game = Game()
         n_players = 2
@@ -662,13 +666,13 @@ class TestGame:
 
         # Test processing player actions
         game._round_winner = winner_idx
-        cardpick_status = game._process_player_card_pickup(play_card_key)
+        cardpick_status = game._process_round_end_actions(play_card_key)
         assert cardpick_status == True
         assert game._players[winner_idx].card_stack.nCards == 2
 
-    def test_process_player_card_pickup_penality_slaps_only(self, monkeypatch):
+    def test_process_round_end_actions_penality_slaps_only(self, monkeypatch):
         """
-        Test _process_player_card_pickup method of Game when only penality slaps are done and cards are not picked up.
+        Test _process_round_end_actions method of Game when only penality slaps are done and cards are not picked up.
         """
         game = Game()
         n_players = 2
@@ -688,14 +692,14 @@ class TestGame:
 
         # Test processing player actions
         game._round_winner = winner_idx
-        cardpick_status = game._process_player_card_pickup(penality_slap_key)
+        cardpick_status = game._process_round_end_actions(penality_slap_key)
         assert cardpick_status == False
         assert game._players[winner_idx].card_stack.nCards == 0
         assert game._round_stack.penalty_card_stack.nCards == 1
 
-    def test_process_player_card_pickup_random_keys(self, monkeypatch):
+    def test_process_round_end_actions_random_keys(self, monkeypatch):
         """
-        Test _process_player_card_pickup method of Game when series of random keys are inputted.
+        Test _process_round_end_actions method of Game when series of random keys are inputted.
         """
         game = Game()
         n_players = 2
@@ -706,12 +710,12 @@ class TestGame:
 
         # Test processing player actions
         game._round_winner = 0
-        cardpick_status = game._process_player_card_pickup("efeeg")
+        cardpick_status = game._process_round_end_actions("efeeg")
         assert cardpick_status == False
 
-    def test_process_player_card_pickup_slap_steal(self, monkeypatch):
+    def test_process_round_end_actions_slap_steal(self, monkeypatch):
         """
-        Test _process_player_card_pickup method of Game when card stack is stolen by a slap.
+        Test _process_round_end_actions method of Game when card stack is stolen by a slap.
         """
         game = Game()
         n_players = 2
@@ -735,7 +739,7 @@ class TestGame:
 
         # Test processing player actions
         game._round_winner = loser_idx
-        cardpick_status = game._process_player_card_pickup(steal_slap_key)
+        cardpick_status = game._process_round_end_actions(steal_slap_key)
         assert cardpick_status == True
         assert game._players[winner_idx].card_stack.nCards == 2
         assert game._players[loser_idx].card_stack.nCards == 0
