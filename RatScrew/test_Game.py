@@ -56,8 +56,8 @@ class TestGame:
         assert game._round_stack._face_card_countdown == 0
         assert game._game_winner is None
         assert game._round_winner is None
-        assert game._won_by_slap == False
-        assert game._player_turn_over == False
+        assert not game._won_by_slap
+        assert not game._player_turn_over
 
     def test_reset_round_parameters(self):
         """
@@ -79,8 +79,8 @@ class TestGame:
         assert game._round_stack.need_face_card is False
         assert game._round_stack._face_card_countdown == 0
         assert game._round_winner is None
-        assert game._won_by_slap == False
-        assert game._player_turn_over == False
+        assert not game._won_by_slap
+        assert not game._player_turn_over
 
     def test_game_winner(self):
         """
@@ -689,7 +689,7 @@ class TestGame:
         # Test processing player actions
         game._round_winner = winner_idx
         cardpick_status = game._process_round_end_actions(play_card_key)
-        assert cardpick_status == True
+        assert cardpick_status
         assert game._players[winner_idx].card_stack.nCards == 2
 
     def test_process_round_end_actions_penality_slaps_only(self, monkeypatch):
@@ -715,7 +715,7 @@ class TestGame:
         # Test processing player actions
         game._round_winner = winner_idx
         cardpick_status = game._process_round_end_actions(penality_slap_key)
-        assert cardpick_status == False
+        assert not cardpick_status
         assert game._players[winner_idx].card_stack.nCards == 0
         assert game._round_stack.penalty_card_stack.nCards == 1
 
@@ -733,7 +733,7 @@ class TestGame:
         # Test processing player actions
         game._round_winner = 0
         cardpick_status = game._process_round_end_actions("efeeg")
-        assert cardpick_status == False
+        assert not cardpick_status
 
     def test_process_round_end_actions_slap_steal(self, monkeypatch):
         """
@@ -762,6 +762,6 @@ class TestGame:
         # Test processing player actions
         game._round_winner = loser_idx
         cardpick_status = game._process_round_end_actions(steal_slap_key)
-        assert cardpick_status == True
+        assert cardpick_status
         assert game._players[winner_idx].card_stack.nCards == 2
         assert game._players[loser_idx].card_stack.nCards == 0

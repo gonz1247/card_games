@@ -25,7 +25,7 @@ class RoundCardStack:
     @need_face_card.setter
     def need_face_card(self, value) -> None:
         """Set need_face_card to read-only"""
-        raise AttributeError(f"need_face_card is a read-only attribute")
+        raise AttributeError("need_face_card is a read-only attribute")
 
     @property
     def played_card_stack(self) -> CardDeck:
@@ -35,7 +35,7 @@ class RoundCardStack:
     @played_card_stack.setter
     def played_card_stack(self, value) -> None:
         """Set played_card_stack to read-only"""
-        raise AttributeError(f"played_card_stack is a read-only attribute")
+        raise AttributeError("played_card_stack is a read-only attribute")
 
     @property
     def penalty_card_stack(self) -> CardDeck:
@@ -45,7 +45,7 @@ class RoundCardStack:
     @penalty_card_stack.setter
     def penalty_card_stack(self, value) -> None:
         """Set penalty_card_stack to read-only"""
-        raise AttributeError(f"penalty_card_stack is a read-only attribute")
+        raise AttributeError("penalty_card_stack is a read-only attribute")
 
     def _process_face_card(self, face_card: Card) -> None:
         """

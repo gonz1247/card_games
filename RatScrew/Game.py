@@ -48,7 +48,7 @@ class Game:
     @game_winner.setter
     def game_winner(self, value) -> None:
         """Set game_winner to read-only"""
-        raise AttributeError(f"game_winner is a read-only attribute")
+        raise AttributeError("game_winner is a read-only attribute")
 
     def print_rules(self) -> None:
         """
