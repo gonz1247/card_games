@@ -5,7 +5,9 @@ FROM python:3.13-slim
 WORKDIR /card_games
 
 # Copy Project files into the container
-COPY . .
+COPY CardDeck CardDeck
+COPY RatScrew RatScrew
+COPY CardGamesMain.py .
 
 # Run Card Games Main Program
 CMD ["python", "CardGamesMain.py"]
