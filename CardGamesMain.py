@@ -1,6 +1,92 @@
 import RatScrew
 
-runner = RatScrew.Game()
-runner.print_rules()
-runner.print_controls_explanation()
-runner.play_game()
+
+class CardGamesRunner:
+    """
+    Class to ochestrate running card games
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize instance of CardGamesRunner
+        """
+        self._game_options = [("Rat Screw", RatScrew.Game)]
+        self._reset_game_selection()
+
+    def run_card_games(self) -> None:
+        playing_games = True
+        while playing_games:
+            # Get game to play
+            self._run_game_selection()
+            if self._game_runner is None:
+                print("Hope you enjoyed playing card games!")
+                return
+            # Run game actions
+            while self._game_runner:
+                self._run_game_action()
+
+    def _reset_game_selection(self) -> None:
+        """Reset game selection state"""
+        self._game_title = None
+        self._game_runner = None
+
+    def _run_game_selection(self) -> None:
+        """
+        Get user input for what game to play and update game selection state
+        """
+        print("Select game that you'd like to play")
+        for idx, (game_title, _) in enumerate(self._game_options):
+            print(f"{idx+1}) {game_title}")
+        print(f"{len(self._game_options)+1}) Quit")
+        valid_selection = False
+        while not valid_selection:
+            selection = input(">").strip()
+            if selection.isnumeric():
+                selection = int(selection) - 1
+                if selection >= 0 and selection <= len(self._game_options):
+                    valid_selection = True
+        self._set_game_selection(selection)
+
+    def _set_game_selection(self, game_selection_idx: int) -> None:
+        """
+        Update game selection state
+
+        game_selection_idx, int
+            Index of game that selection state should be set to
+        """
+        if game_selection_idx >= len(self._game_options) or game_selection_idx < 0:
+            self._reset_game_selection()
+            return
+        self._game_title = self._game_options[game_selection_idx][0]
+        self._game_runner = self._game_options[game_selection_idx][1]()
+
+    def _run_game_action(self) -> None:
+        """
+        Get user input for what game action should be done and run action
+        """
+        if self._game_runner is None:
+            raise AttributeError(
+                "Game must be selected before user actions can be requested"
+            )
+        action_options = {
+            "1": self._game_runner.play_game,
+            "2": self._game_runner.print_rules,
+            "3": self._game_runner.print_controls_explanation,
+            "4": self._reset_game_selection,
+        }
+        print(f"Select action for {self._game_title}")
+        print("1) Play game")
+        print("2) See game rules")
+        print("3) See controls explanation")
+        print("4) Quit and select different game")
+        valid_selection = False
+        while not valid_selection:
+            selection = input(">").strip()
+            game_action = action_options.get(selection, None)
+            if game_action is not None:
+                valid_selection = True
+        game_action()
+
+
+if __name__ == "__main__":
+    CardGamesRunner().run_card_games()
