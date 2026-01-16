@@ -29,6 +29,13 @@ class Game:
         # Parameters for tracking game state
         self._round_stack = RoundCardStack()
         self._game_winner = None
+        self._reset_round_parameters()
+
+    def _reset_round_parameters(self) -> None:
+        """
+        Resets round parameters to initial states
+        """
+        self._round_stack.reset()
         self._round_winner = None
         self._won_by_slap = False
         self._player_turn_over = False
@@ -166,9 +173,7 @@ class Game:
         print(f"Player #{starting_player+1} goes first.")
         previous_player = None
         current_player = starting_player
-        self._round_winner = None
-        self._won_by_slap = False
-        self._player_turn_over = False
+        self._reset_round_parameters()
         while self._round_winner is None:
             # Check to see if current player's turn is over
             if self._player_turn_over:

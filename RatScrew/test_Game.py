@@ -37,9 +37,10 @@ class TestGame:
         game._slap_keys = None
         game._players = None
         game._round_stack = None
-        self._game_winner = 1
-        self._round_winner = 1
-        self._player_turn_over = True
+        game._game_winner = 1
+        game._round_winner = 1
+        game._won_by_slap = True
+        game._player_turn_over = True
 
         # Reset game parameters
         game.reset_game_parameters()
@@ -55,6 +56,30 @@ class TestGame:
         assert game._round_stack._face_card_countdown == 0
         assert game._game_winner is None
         assert game._round_winner is None
+        assert game._won_by_slap == False
+        assert game._player_turn_over == False
+
+    def test_reset_round_parameters(self):
+        """
+        Test reset_round_parameters method of Game.
+        """
+        game = Game()
+        # Modify round parameters to be set to something other than their default to ensure reset works
+        game._round_stack.add_played_card(Card("4", "hearts"))
+        game._round_winner = 1
+        game._won_by_slap = True
+        game._player_turn_over = True
+
+        # Reset game parameters
+        game._reset_round_parameters()
+
+        # Check that game parameters are reset to initial states
+        assert game._round_stack.played_card_stack.nCards == 0
+        assert game._round_stack.penalty_card_stack.nCards == 0
+        assert game._round_stack.need_face_card is False
+        assert game._round_stack._face_card_countdown == 0
+        assert game._round_winner is None
+        assert game._won_by_slap == False
         assert game._player_turn_over == False
 
     def test_game_winner(self):
@@ -208,9 +233,6 @@ class TestGame:
         game._players[winning_player].card_stack = CardDeck(nDecks=0)
         game._players[winning_player].card_stack.add_card(Card("jack", "spades"))
 
-        # Add a card to the penalty stack
-        game._round_stack.add_penalty_card(Card("7", "clubs"))
-
         # Patch the built-in 'input' function to force a sequence of plays
         user_inputs = iter(["a", "c", "a", "c"])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
@@ -218,7 +240,7 @@ class TestGame:
         # Play round where second player loses since they cannot play a face card
         game._play_round(starting_player)
         assert game._round_winner == winning_player
-        assert game._players[winning_player].card_stack.nCards == 4
+        assert game._players[winning_player].card_stack.nCards == 3
         assert game._players[starting_player].card_stack.nCards == 0
         assert game._round_stack.played_card_stack.nCards == 0
         assert game._round_stack.penalty_card_stack.nCards == 0
