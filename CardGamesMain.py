@@ -35,17 +35,19 @@ class CardGamesRunner:
         Get user input for what game to play and update game selection state
         """
         print("Select game that you'd like to play")
+        game_options = dict()
         for idx, (game_title, _) in enumerate(self._game_options):
             print(f"{idx+1}) {game_title}")
+            game_options[str(idx + 1)] = self._set_game_selection
         print(f"{len(self._game_options)+1}) Quit")
+        game_options[str(len(self._game_options) + 1)] = lambda x: None
         valid_selection = False
         while not valid_selection:
             selection = input(">").strip()
-            if selection.isnumeric():
-                selection = int(selection) - 1
-                if selection >= 0 and selection <= len(self._game_options):
-                    valid_selection = True
-        self._set_game_selection(selection)
+            game_selection = game_options.get(selection, None)
+            if game_selection is not None:
+                valid_selection = True
+        game_selection(int(selection) - 1)
 
     def _set_game_selection(self, game_selection_idx: int) -> None:
         """
