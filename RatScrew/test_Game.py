@@ -99,11 +99,11 @@ class TestGame:
         """
         Game().print_rules()
 
-    def test_print_controls_explanation(self):
+    def test_print_controls(self):
         """
-        Provide test coverage for print_controls_explanation method of Game
+        Provide test coverage for print_controls method of Game
         """
-        Game().print_controls_explanation()
+        Game().print_controls()
 
     def test_ask_user_for_number_of_players_valid(self, monkeypatch):
         """

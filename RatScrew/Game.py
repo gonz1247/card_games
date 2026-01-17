@@ -1,9 +1,10 @@
+from CardGamesMain import CardGameTemplate
 from CardDeck import CardDeck
 from RatScrew.RoundCardStack import RoundCardStack
 from RatScrew.Player import Player
 
 
-class Game:
+class Game(CardGameTemplate):
     """
     Class to run and manage gameplay state of Rat Screw card game
     """
@@ -16,6 +17,7 @@ class Game:
         """
         Initialize instance of Game
         """
+        self._game_title = "Rat Screw"
         self.reset_game_parameters()
 
     def reset_game_parameters(self) -> None:
@@ -71,7 +73,7 @@ class Game:
         print("6. The game continues until one player has all the cards.")
         print()
 
-    def print_controls_explanation(self) -> None:
+    def print_controls(self) -> None:
         """
         Print rat screw game controls to screen
         """
