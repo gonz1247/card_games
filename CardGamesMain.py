@@ -1,6 +1,38 @@
 import RatScrew
 
 
+class CardGameTemplate:
+    """
+    Template card game class that is meant to have methods overridden
+    """
+
+    _game_title = "Placeholder Game Title"
+
+    def __init__(self) -> None:
+        """
+        Initialize instance of CardGameTemplate
+        """
+        return
+
+    def print_rules(self) -> None:
+        """
+        Placeholder for method that prints card game rules to screen
+        """
+        print("~~Placeholder card game rules~~")
+
+    def print_controls(self) -> None:
+        """
+        Placeholder for method that prints card game controls to screen
+        """
+        print("~~Placeholder card game controls~~")
+
+    def play_game(self) -> None:
+        """
+        Placeholder for method that starts playing card game
+        """
+        print("~~Placeholder card game gameplay~~")
+
+
 class CardGamesRunner:
     """
     Class to ochestrate playing suite of card games
@@ -10,7 +42,7 @@ class CardGamesRunner:
         """
         Initialize instance of CardGamesRunner
         """
-        self._game_options = [("Rat Screw", RatScrew.Game)]
+        self._game_options = [RatScrew.Game]
         self._reset_game_selection()
 
     def run_card_games(self) -> None:
@@ -26,7 +58,6 @@ class CardGamesRunner:
 
     def _reset_game_selection(self) -> None:
         """Reset game selection state"""
-        self._game_title = None
         self._game_runner = None
 
     def _run_game_selection(self) -> None:
@@ -35,8 +66,9 @@ class CardGamesRunner:
         """
         print("Select game that you'd like to play")
         game_options = dict()
-        for idx, (game_title, _) in enumerate(self._game_options):
-            print(f"{idx+1}) {game_title}")
+        for idx, game_class in enumerate(self._game_options):
+            game = game_class()
+            print(f"{idx+1}) {game._game_title}")
             game_options[str(idx + 1)] = self._set_game_selection
         print(f"{len(self._game_options)+1}) Quit")
         game_options[str(len(self._game_options) + 1)] = lambda x: None
@@ -58,8 +90,7 @@ class CardGamesRunner:
         if game_selection_idx >= len(self._game_options) or game_selection_idx < 0:
             self._reset_game_selection()
             return
-        self._game_title = self._game_options[game_selection_idx][0]
-        self._game_runner = self._game_options[game_selection_idx][1]()
+        self._game_runner = self._game_options[game_selection_idx]()
 
     def _run_game_action(self) -> None:
         """
@@ -72,13 +103,13 @@ class CardGamesRunner:
         action_options = {
             "1": self._game_runner.play_game,
             "2": self._game_runner.print_rules,
-            "3": self._game_runner.print_controls_explanation,
+            "3": self._game_runner.print_controls,
             "4": self._reset_game_selection,
         }
-        print(f"Select action for {self._game_title}")
+        print(f"Select action for {self._game_runner._game_title}")
         print("1) Play game")
         print("2) See game rules")
-        print("3) See controls explanation")
+        print("3) See game controls")
         print("4) Quit and select different game")
         valid_selection = False
         while not valid_selection:
