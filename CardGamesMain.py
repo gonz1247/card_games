@@ -3,7 +3,7 @@ import RatScrew
 
 class CardGamesRunner:
     """
-    Class to ochestrate running card games
+    Class to ochestrate playing suite of card games
     """
 
     def __init__(self) -> None:
@@ -14,8 +14,7 @@ class CardGamesRunner:
         self._reset_game_selection()
 
     def run_card_games(self) -> None:
-        playing_games = True
-        while playing_games:
+        while True:
             # Get game to play
             self._run_game_selection()
             if self._game_runner is None:
@@ -91,4 +90,4 @@ class CardGamesRunner:
 
 
 if __name__ == "__main__":
-    CardGamesRunner().run_card_games()
+    CardGamesRunner().run_card_games()  # pragma: no cover
