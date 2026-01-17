@@ -31,7 +31,7 @@ class TestCardGamesRunner:
         runner._game_runner = "dummy"
 
         runner._reset_game_selection()
-        assert runner._game_runner == None
+        assert runner._game_runner is None
 
     def test_run_game_selection(self, monkeypatch):
         """
@@ -54,10 +54,10 @@ class TestCardGamesRunner:
 
         # game index is too small
         runner._set_game_selection(-1)
-        assert runner._game_runner == None
+        assert runner._game_runner is None
         # game index is greater than last game option
         runner._set_game_selection(len(runner._game_options))
-        assert runner._game_runner == None
+        assert runner._game_runner is None
 
     def test_set_game_selection_valid(self):
         """
