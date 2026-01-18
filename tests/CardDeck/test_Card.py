@@ -1,6 +1,6 @@
 import pytest
 
-from CardDeck.Card import Card
+from card_games.CardDeck import Card
 
 
 class TestCard:

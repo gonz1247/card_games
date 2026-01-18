@@ -1,20 +1,5 @@
 import pytest
-from CardGamesMain import CardGamesRunner, CardGameTemplate
-
-
-class TestCardGameTemplate:
-    """
-    Provide test coverage for CardGameTemplate class
-    """
-
-    def test_provide_coverage(self):
-        """
-        Provide test coverage for template class
-        """
-        template = CardGameTemplate()
-        template.print_rules()
-        template.print_controls()
-        template.play_game()
+from card_games.CardGamesRunner import CardGamesRunner
 
 
 class TestCardGamesRunner:

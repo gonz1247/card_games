@@ -1,7 +1,7 @@
-from CardGamesMain import CardGameTemplate
-from CardDeck import CardDeck
-from RatScrew.RoundCardStack import RoundCardStack
-from RatScrew.Player import Player
+from card_games.Templates.CardGameTemplate import CardGameTemplate
+from card_games.CardDeck.CardDeck import CardDeck
+from card_games.RatScrew.RoundCardStack import RoundCardStack
+from card_games.RatScrew.Player import Player
 
 
 class Game(CardGameTemplate):
