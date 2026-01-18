@@ -1,14 +1,14 @@
 from card_games import RatScrew
 
 
-class CardGamesRunner:
+class DockerCardGamesRunner:
     """
-    Class to ochestrate playing suite of card games
+    Class to ochestrate playing suite of card games in Docker container
     """
 
     def __init__(self) -> None:
         """
-        Initialize instance of CardGamesRunner
+        Initialize instance of DockerCardGamesRunner
         """
         self._game_options = [RatScrew.Game]
         self._reset_game_selection()
@@ -88,8 +88,5 @@ class CardGamesRunner:
         game_action()
 
 
-def play_card_games() -> None:
-    """
-    Launch playing card games through the CardGamesRunner class
-    """
-    CardGamesRunner().run_card_games()
+if __name__ == "__main__":
+    DockerCardGamesRunner().run_card_games()  # pragma: no cover

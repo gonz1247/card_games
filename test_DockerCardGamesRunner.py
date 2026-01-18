@@ -1,19 +1,18 @@
 import pytest
-from card_games.CardGamesRunner import CardGamesRunner
-from card_games.CardGamesRunner.CardGamesRunner import play_card_games
+from DockerCardGamesRunner import DockerCardGamesRunner
 
 
-class TestCardGamesRunner:
+class TestDockerCardGamesRunner:
     """
-    Test functionality of CardGamesRunner class
+    Test functionality of DockerCardGamesRunner class
     """
 
     def test_reset_game_selection(self):
         """
-        Test _reset_game_selection method of CardGamesRunner.
+        Test _reset_game_selection method of DockerCardGamesRunner.
         """
 
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
         runner._game_runner = "dummy"
 
         runner._reset_game_selection()
@@ -21,9 +20,9 @@ class TestCardGamesRunner:
 
     def test_run_game_selection(self, monkeypatch):
         """
-        Test _run_game_selection method of CardGamesRunner
+        Test _run_game_selection method of DockerCardGamesRunner
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
 
         # override built-in input function to return test input
         user_inputs = iter(["-1", "1"])
@@ -34,9 +33,9 @@ class TestCardGamesRunner:
 
     def test_set_game_selection_invalid(self):
         """
-        Test _set_game_selection method of CardGamesRunner when invalid game index is inputted
+        Test _set_game_selection method of DockerCardGamesRunner when invalid game index is inputted
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
 
         # game index is too small
         runner._set_game_selection(-1)
@@ -47,9 +46,9 @@ class TestCardGamesRunner:
 
     def test_set_game_selection_valid(self):
         """
-        Test _set_game_selection method of CardGamesRunner when valid game index is inputted
+        Test _set_game_selection method of DockerCardGamesRunner when valid game index is inputted
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
 
         # game index is too small
         runner._set_game_selection(0)
@@ -57,17 +56,17 @@ class TestCardGamesRunner:
 
     def test_run_game_action_no_game_select(self):
         """
-        Test _run_game_action method of CardGamesRunner when no game has been selected yet
+        Test _run_game_action method of DockerCardGamesRunner when no game has been selected yet
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
         with pytest.raises(AttributeError):
             runner._run_game_action()
 
     def test_run_game_action_game_selected(self, monkeypatch):
         """
-        Test _run_game_action method of CardGamesRunner when game has been selected
+        Test _run_game_action method of DockerCardGamesRunner when game has been selected
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
         # Select game
         runner._game_runner = runner._game_options[0]()
         # override built-in input function to return test input
@@ -78,29 +77,12 @@ class TestCardGamesRunner:
 
     def test_run_card_game(self, monkeypatch):
         """
-        Provide test coverage of run_card_game method of CardGamesRunner
+        Provide test coverage of run_card_game method of DockerCardGamesRunner
         """
-        runner = CardGamesRunner()
+        runner = DockerCardGamesRunner()
 
         # override built-in input function to return test input
         user_inputs = iter(["1", "4", str(len(runner._game_options) + 1)])
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         runner.run_card_games()
-
-
-class TestPlayCardGames:
-    """
-    Provide test coverage for play_card_games function
-    """
-
-    def test_coverage(self, monkeypatch):
-        """
-        Core functionality already tested in test_run_card_game from TestCardGamesRunner, so just providing test coverage
-        """
-        runner = CardGamesRunner()
-        # override built-in input function to return test input
-        user_inputs = iter(["1", "4", str(len(runner._game_options) + 1)])
-        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
-
-        play_card_games()

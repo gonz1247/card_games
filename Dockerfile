@@ -11,8 +11,8 @@ COPY README.md .
 COPY src/ .
 RUN python -m pip install . 
 
-# Copy script that will be ran in container
-COPY DockerEntry.py . 
+# Copy card games runner script to be ran in container
+COPY DockerCardGamesRunner.py . 
 
 # Launch Card Games Runner
-CMD ["python", "DockerEntry.py"]
+CMD ["python", "DockerCardGamesRunner.py"]
