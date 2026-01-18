@@ -1,4 +1,4 @@
-# Use image for running Python 3.10 applications
+# Use image for running Python 3.13 applications
 FROM python:3.13-slim
 
 # Setting working directory inside the container
