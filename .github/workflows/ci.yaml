@@ -29,6 +29,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+        run: python -m pip install -e .
       - name: Run linting
         # Run linter only on ubuntu since not compatible with windows or macos
         # Linter local syntax: docker run -e RUN_LOCAL=true -e DEFAULT_BRANCH=main -e IGNORE_GITIGNORED_FILES=true -e VALIDATE_PYTHON_RUFF=true -e VALIDATE_PYTHON_BLACK -v .:/tmp/lint --rm ghcr.io/super-linter/super-linter:latest

@@ -13,6 +13,7 @@ dist/
 htmlcov/
 .coverage
 coverage.xml
+pytest.xml
 
 # Sphinx documentation
 docs/_build/
