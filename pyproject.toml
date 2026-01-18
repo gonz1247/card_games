@@ -12,7 +12,7 @@ requires-python = ">=3.10"
 authors = [
   {name = "Alejandro (Gonzo) Gonzalez", email = "agonzalez1043@gmail.com"},
 ]
-description = "Virtualization of standard deck card games"
+description = "Virtualization of card games with a standard deck"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -21,9 +21,6 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python"
 ]
-
-[project.scripts]
-play_card_games = "card_games.CardGamesRunner.CardGamesRunner:play_card_games"
 
 [project.urls]
 Homepage = "https://github.com/gonz1247/card_games"
