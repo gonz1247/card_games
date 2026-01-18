@@ -29,6 +29,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Install card_games package locally
         run: python -m pip install -e .
       - name: Run linting
         # Run linter only on ubuntu since not compatible with windows or macos
