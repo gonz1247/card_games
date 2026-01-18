@@ -22,6 +22,9 @@ classifiers = [
   "Programming Language :: Python"
 ]
 
+[project.scripts]
+play_card_games = "card_games.CardGamesRunner.CardGamesRunner:play_card_games"
+
 [project.urls]
 Homepage = "https://github.com/gonz1247/card_games"
 Repository = "https://github.com/gonz1247/card_games.git"

@@ -88,5 +88,8 @@ class CardGamesRunner:
         game_action()
 
 
-if __name__ == "__main__":
-    CardGamesRunner().run_card_games()  # pragma: no cover
+def play_card_games() -> None:
+    """
+    Launch playing card games through the CardGamesRunner class
+    """
+    CardGamesRunner().run_card_games()
