@@ -1,4 +1,3 @@
-import pytest
 from card_games.Templates import CardGameTemplate
 
 
