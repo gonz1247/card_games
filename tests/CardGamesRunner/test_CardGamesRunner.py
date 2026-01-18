@@ -1,20 +1,6 @@
 import pytest
-from CardGamesMain import CardGamesRunner, CardGameTemplate
-
-
-class TestCardGameTemplate:
-    """
-    Provide test coverage for CardGameTemplate class
-    """
-
-    def test_provide_coverage(self):
-        """
-        Provide test coverage for template class
-        """
-        template = CardGameTemplate()
-        template.print_rules()
-        template.print_controls()
-        template.play_game()
+from card_games.CardGamesRunner import CardGamesRunner
+from card_games.CardGamesRunner.CardGamesRunner import play_card_games
 
 
 class TestCardGamesRunner:
@@ -101,3 +87,20 @@ class TestCardGamesRunner:
         monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
 
         runner.run_card_games()
+
+
+class TestPlayCardGames:
+    """
+    Provide test coverage for play_card_games function
+    """
+
+    def test_coverage(self, monkeypatch):
+        """
+        Core functionality already tested in test_run_card_game from TestCardGamesRunner, so just providing test coverage
+        """
+        runner = CardGamesRunner()
+        # override built-in input function to return test input
+        user_inputs = iter(["1", "4", str(len(runner._game_options) + 1)])
+        monkeypatch.setattr("builtins.input", lambda _: next(user_inputs))
+
+        play_card_games()

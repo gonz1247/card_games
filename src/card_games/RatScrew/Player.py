@@ -1,5 +1,6 @@
-from CardDeck import CardDeck, Card
-from RatScrew.RoundCardStack import RoundCardStack
+from card_games.CardDeck.CardDeck import CardDeck
+from card_games.CardDeck.Card import Card
+from card_games.RatScrew.RoundCardStack import RoundCardStack
 
 
 class Player:

@@ -1,8 +1,7 @@
 import pytest
 
-from CardDeck import Card, CardDeck
-from RatScrew.RoundCardStack import RoundCardStack
-from RatScrew.Player import Player
+from card_games.CardDeck import Card, CardDeck
+from card_games.RatScrew import RoundCardStack, Player
 
 
 class MockPlayer(Player):

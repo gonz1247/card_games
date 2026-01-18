@@ -1,6 +1,6 @@
 import pytest
-from CardDeck import CardDeck, Card
-from RatScrew.RoundCardStack import RoundCardStack
+from card_games.CardDeck import CardDeck, Card
+from card_games.RatScrew import RoundCardStack
 
 
 class TestRoundCardStack:

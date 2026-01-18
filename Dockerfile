@@ -1,13 +1,18 @@
-# Use image for running Python 3.10 applications
+# Use image for running Python 3.13 applications
 FROM python:3.13-slim
 
 # Setting working directory inside the container
 WORKDIR /card_games
 
-# Copy Project files into the container
-COPY CardDeck/__init__.py CardDeck/Card.py CardDeck/CardDeck.py CardDeck/
-COPY RatScrew/__init__.py RatScrew/Game.py RatScrew/Player.py RatScrew/RoundCardStack.py  RatScrew/
-COPY CardGamesMain.py .
+# Do a local install of card_games package
+COPY pyproject.toml .
+COPY LICENSE . 
+COPY README.md . 
+COPY src/ .
+RUN python -m pip install . 
 
-# Run Card Games Main Program
-CMD ["python", "CardGamesMain.py"]
+# Copy script that will be ran in container
+COPY DockerEntry.py . 
+
+# Launch Card Games Runner
+CMD ["python", "DockerEntry.py"]
