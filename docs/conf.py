@@ -6,6 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os, sys
+
+sys.path.insert(0, os.path.abspath("../src"))
+
 project = "Gonzo Card Games"
 copyright = "2026, Alejandro (Gonzo) Gonzalez"
 author = "Alejandro (Gonzo) Gonzalez"
