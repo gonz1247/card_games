@@ -12,6 +12,10 @@ same API calls for getting a games rules, controls, and for initiating play.
 
 ## Installation
 
+## Documentation
+
+Documentation on how to use card_games library is available at [https://gonz1247.github.io/card_games/](https://gonz1247.github.io/card_games/)
+
 ## Running locally with Docker
 
 This project can be ran locally using Docker if just interested in playing the currently available built-in card games and not creating new ones. To run locally with Docker you must have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
