@@ -1,4 +1,4 @@
-from card_games.Templates import CardGameTemplate
+from gonzo_card_games.Templates import CardGameTemplate
 
 
 class TestCardGameTemplate:

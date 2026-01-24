@@ -1,5 +1,5 @@
-from card_games.CardDeck.CardDeck import CardDeck
-from card_games.CardDeck.Card import Card
+from gonzo_card_games.CardDeck.CardDeck import CardDeck
+from gonzo_card_games.CardDeck.Card import Card
 
 
 class RoundCardStack:

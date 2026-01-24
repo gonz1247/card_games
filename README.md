@@ -1,4 +1,4 @@
-# card_games
+# Gonzo Card Games
 
 Library to create virtualizations of card games with a standard deck 52 card deck(s).
 
@@ -12,14 +12,16 @@ same API calls for getting a games rules, controls, and for initiating play.
 
 ## Installation
 
+python -m pip install gonzo-card-games
+
 ## Documentation
 
-Documentation on how to use card_games library is available at [https://gonz1247.github.io/card_games/](https://gonz1247.github.io/card_games/)
+Documentation on how to use Gonzo Card Games library is available at [https://gonz1247.github.io/gonzo_card_games/](https://gonz1247.github.io/gonzo_card_games/)
 
 ## Running locally with Docker
 
 This project can be ran locally using Docker if just interested in playing the currently available built-in card games and not creating new ones. To run locally with Docker you must have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
 
 1. Launch Docker Desktop on your machine
-2. Build the Docker image for card_games: `docker build -t card_games .`
-3. Launch the Docker container to play card games: `docker run --rm -it card_games`
+2. Build the Docker image for gonzo_card_games: `docker build -t gonzo_card_games .`
+3. Launch the Docker container to play card games: `docker run --rm -it gonzo_card_games`

@@ -1,6 +1,6 @@
 import pytest
 
-from card_games.CardDeck import CardDeck, Card
+from gonzo_card_games.CardDeck import CardDeck, Card
 
 
 class TestCardDeck:
