@@ -12,9 +12,11 @@ same API calls for getting a games rules, controls, and for initiating play.
 
 ## Installation
 
+python -m pip install gonzo-card-games
+
 ## Documentation
 
-Documentation on how to use Gonzo Card Games library is available at [https://gonz1247.github.io/card_games/](https://gonz1247.github.io/card_games/)
+Documentation on how to use Gonzo Card Games library is available at [https://gonz1247.github.io/gonzo_card_games/](https://gonz1247.github.io/gonzo_card_games/)
 
 ## Running locally with Docker
 

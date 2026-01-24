@@ -7,7 +7,7 @@ packages = ["src/gonzo_card_games"]
 
 [project]
 name = "gonzo_card_games"
-version = "0.0.1"
+version = "0.0.2"
 requires-python = ">=3.10"
 authors = [
   {name = "Alejandro (Gonzo) Gonzalez", email = "agonzalez1043@gmail.com"},
@@ -23,6 +23,6 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/gonz1247/card_games"
-Repository = "https://github.com/gonz1247/card_games.git"
-Documentation = "https://gonz1247.github.io/card_games/"
+Homepage = "https://github.com/gonz1247/gonzo_card_games"
+Repository = "https://github.com/gonz1247/gonzo_card_games.git"
+Documentation = "https://gonz1247.github.io/gonzo_card_games/"

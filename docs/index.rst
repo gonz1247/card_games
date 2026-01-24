@@ -17,7 +17,7 @@ same API calls for getting a games rules, controls, and for initiating play.
 
 Installation
 ====================================
-Coming soon...
+python -m pip install gonzo-card-games
 
 .. toctree::
    :maxdepth: 2
