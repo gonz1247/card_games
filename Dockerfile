@@ -2,9 +2,9 @@
 FROM python:3.13-slim
 
 # Setting working directory inside the container
-WORKDIR /card_games
+WORKDIR /gonzo_card_games
 
-# Do a local install of card_games package
+# Do a local install of gonzo_card_games package
 COPY pyproject.toml .
 COPY LICENSE . 
 COPY README.md . 

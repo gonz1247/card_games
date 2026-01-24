@@ -1,7 +1,7 @@
 import pytest
 
-from card_games.CardDeck import Card, CardDeck
-from card_games.RatScrew import RoundCardStack, Player
+from gonzo_card_games.CardDeck import Card, CardDeck
+from gonzo_card_games.RatScrew import RoundCardStack, Player
 
 
 class MockPlayer(Player):

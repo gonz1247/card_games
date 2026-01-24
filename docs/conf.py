@@ -6,10 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Card Games"
+project = "Gonzo Card Games"
 copyright = "2026, Alejandro (Gonzo) Gonzalez"
 author = "Alejandro (Gonzo) Gonzalez"
-release = "1.0.0"
+release = "0.0.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

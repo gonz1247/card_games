@@ -1,4 +1,4 @@
-from card_games import RatScrew
+from gonzo_card_games import RatScrew
 
 
 class DockerCardGamesRunner:
