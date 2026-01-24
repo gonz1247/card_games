@@ -1,9 +1,11 @@
 name: documentation
 
-on: [push, workflow_dispatch]
-  branches:
-    - main  
-    - documentation
+on:
+  push:
+    branches:
+      - main
+      - documentation
+  workflow_dispatch:
 
 permissions:
   contents: write
