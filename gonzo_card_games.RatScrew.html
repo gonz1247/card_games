@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gonzo_card_games.RatScrew module &mdash; Gonzo Card Games 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="gonzo_card_games.Templates module" href="gonzo_card_games.Templates.html" />
+    <link rel="prev" title="gonzo_card_games.CardDeck module" href="gonzo_card_games.CardDeck.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Gonzo Card Games
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="gonzo_card_games.html">gonzo_card_games package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gonzo_card_games.CardDeck.html">gonzo_card_games.CardDeck module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gonzo_card_games.RatScrew module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game"><code class="docutils literal notranslate"><span class="pre">Game</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game.game_winner"><code class="docutils literal notranslate"><span class="pre">Game.game_winner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game.play_game"><code class="docutils literal notranslate"><span class="pre">Game.play_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game.print_controls"><code class="docutils literal notranslate"><span class="pre">Game.print_controls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game.print_rules"><code class="docutils literal notranslate"><span class="pre">Game.print_rules()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Game.reset_game_parameters"><code class="docutils literal notranslate"><span class="pre">Game.reset_game_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player"><code class="docutils literal notranslate"><span class="pre">Player</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player.card_stack"><code class="docutils literal notranslate"><span class="pre">Player.card_stack</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player.play_card"><code class="docutils literal notranslate"><span class="pre">Player.play_card()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player.play_key"><code class="docutils literal notranslate"><span class="pre">Player.play_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player.slap_key"><code class="docutils literal notranslate"><span class="pre">Player.slap_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.Player.take_round_stack"><code class="docutils literal notranslate"><span class="pre">Player.take_round_stack()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack"><code class="docutils literal notranslate"><span class="pre">RoundCardStack</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.add_penalty_card"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.add_penalty_card()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.add_played_card"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.add_played_card()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.has_stack_been_won"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.has_stack_been_won()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.is_valid_slap"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.is_valid_slap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.need_face_card"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.need_face_card</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.penalty_card_stack"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.penalty_card_stack</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.played_card_stack"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.played_card_stack</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack.reset"><code class="docutils literal notranslate"><span class="pre">RoundCardStack.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gonzo_card_games.Templates.html">gonzo_card_games.Templates module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gonzo Card Games</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gonzo_card_games.html">gonzo_card_games package</a></li>
+      <li class="breadcrumb-item active">gonzo_card_games.RatScrew module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gonzo_card_games.RatScrew.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-gonzo_card_games.RatScrew">
+<span id="gonzo-card-games-ratscrew-module"></span><h1>gonzo_card_games.RatScrew module<a class="headerlink" href="#module-gonzo_card_games.RatScrew" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gonzo_card_games.RatScrew.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Game.html#Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Game" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="gonzo_card_games.Templates.html#gonzo_card_games.Templates.CardGameTemplate" title="gonzo_card_games.Templates.CardGameTemplate.CardGameTemplate"><code class="xref py py-class docutils literal notranslate"><span class="pre">CardGameTemplate</span></code></a></p>
+<p>Class to run and manage gameplay state of Rat Screw card game</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game.game_winner">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">game_winner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gonzo_card_games.RatScrew.Game.game_winner" title="Link to this definition"></a></dt>
+<dd><p>Return the index of the player who won the most recently completed game, or None if no winner yet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game.play_game">
+<span class="sig-name descname"><span class="pre">play_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Game.html#Game.play_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Game.play_game" title="Link to this definition"></a></dt>
+<dd><p>Play rat screw game</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game.print_controls">
+<span class="sig-name descname"><span class="pre">print_controls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Game.html#Game.print_controls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Game.print_controls" title="Link to this definition"></a></dt>
+<dd><p>Print rat screw game controls to screen</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game.print_rules">
+<span class="sig-name descname"><span class="pre">print_rules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Game.html#Game.print_rules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Game.print_rules" title="Link to this definition"></a></dt>
+<dd><p>Print rat screw game rules to screen</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Game.reset_game_parameters">
+<span class="sig-name descname"><span class="pre">reset_game_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Game.html#Game.reset_game_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Game.reset_game_parameters" title="Link to this definition"></a></dt>
+<dd><p>Resets game parameters to initial/empty states</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gonzo_card_games.RatScrew.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">invalid_action_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Player.html#Player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Player" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manage player state of participant in game of rat screw</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player.card_stack">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">card_stack</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.CardDeck" title="gonzo_card_games.CardDeck.CardDeck.CardDeck"><span class="pre">CardDeck</span></a></em><a class="headerlink" href="#gonzo_card_games.RatScrew.Player.card_stack" title="Link to this definition"></a></dt>
+<dd><p>Return player’s the players deck of cards</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player.play_card">
+<span class="sig-name descname"><span class="pre">play_card</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.Card" title="gonzo_card_games.CardDeck.Card.Card"><span class="pre">Card</span></a></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Player.html#Player.play_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Player.play_card" title="Link to this definition"></a></dt>
+<dd><p>Play a card from player’s card stack</p>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<p>Card to be played from the player’s card stack</p>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player.play_key">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">play_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gonzo_card_games.RatScrew.Player.play_key" title="Link to this definition"></a></dt>
+<dd><p>Return value of the key that player uses for playing cards</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player.slap_key">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slap_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gonzo_card_games.RatScrew.Player.slap_key" title="Link to this definition"></a></dt>
+<dd><p>Return value of the key that player uses for slapping the card stack</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.Player.take_round_stack">
+<span class="sig-name descname"><span class="pre">take_round_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">round_stack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gonzo_card_games.RatScrew.RoundCardStack" title="gonzo_card_games.RatScrew.RoundCardStack.RoundCardStack"><span class="pre">RoundCardStack</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/Player.html#Player.take_round_stack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.Player.take_round_stack" title="Link to this definition"></a></dt>
+<dd><p>Remove cards from round stack and add it to player’s card stack</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>round_stack: RoundCardStack</dt><dd><p>The round stack that is being added to the player’s card stack</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gonzo_card_games.RatScrew.</span></span><span class="sig-name descname"><span class="pre">RoundCardStack</span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to manage the stack of cards played during a round of Rat Screw</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.add_penalty_card">
+<span class="sig-name descname"><span class="pre">add_penalty_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">card</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.Card" title="gonzo_card_games.CardDeck.Card.Card"><span class="pre">Card</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack.add_penalty_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.add_penalty_card" title="Link to this definition"></a></dt>
+<dd><p>Add penalty cards to the penalty stack</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>card: Card</dt><dd><p>Card to be added to the penalty stack.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.add_played_card">
+<span class="sig-name descname"><span class="pre">add_played_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">card</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.Card" title="gonzo_card_games.CardDeck.Card.Card"><span class="pre">Card</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack.add_played_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.add_played_card" title="Link to this definition"></a></dt>
+<dd><p>Play a card onto the round stack and update face card countdown if necessary</p>
+<section id="id2">
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>card: Card</dt><dd><p>The card to be played onto the round stack.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.has_stack_been_won">
+<span class="sig-name descname"><span class="pre">has_stack_been_won</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack.has_stack_been_won"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.has_stack_been_won" title="Link to this definition"></a></dt>
+<dd><p>Determine if stack has been won by a player</p>
+<section id="id3">
+<h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>Boolean indicating whether the stack has been won</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.is_valid_slap">
+<span class="sig-name descname"><span class="pre">is_valid_slap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack.is_valid_slap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.is_valid_slap" title="Link to this definition"></a></dt>
+<dd><p>Determine if slapping current stack is valid</p>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>Boolean indicating whether the stack is in a valid slap state</p>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.need_face_card">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">need_face_card</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.need_face_card" title="Link to this definition"></a></dt>
+<dd><p>Return round stack state of needing a face card added to it</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.penalty_card_stack">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">penalty_card_stack</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.CardDeck" title="gonzo_card_games.CardDeck.CardDeck.CardDeck"><span class="pre">CardDeck</span></a></em><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.penalty_card_stack" title="Link to this definition"></a></dt>
+<dd><p>Return stack of cards that have been added to the penalty pile</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.played_card_stack">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">played_card_stack</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="gonzo_card_games.CardDeck.html#gonzo_card_games.CardDeck.CardDeck" title="gonzo_card_games.CardDeck.CardDeck.CardDeck"><span class="pre">CardDeck</span></a></em><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.played_card_stack" title="Link to this definition"></a></dt>
+<dd><p>Return stack of cards that have been played to round stack</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gonzo_card_games.RatScrew.RoundCardStack.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gonzo_card_games/RatScrew/RoundCardStack.html#RoundCardStack.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gonzo_card_games.RatScrew.RoundCardStack.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset round stack to intialized state</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gonzo_card_games.CardDeck.html" class="btn btn-neutral float-left" title="gonzo_card_games.CardDeck module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gonzo_card_games.Templates.html" class="btn btn-neutral float-right" title="gonzo_card_games.Templates module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Alejandro (Gonzo) Gonzalez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gonzo_card_games.RatScrew.Game &mdash; Gonzo Card Games 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/fonts.css?v=5583d106" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Gonzo Card Games
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gonzo_card_games.html">gonzo_card_games package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gonzo Card Games</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gonzo_card_games.RatScrew.Game</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gonzo_card_games.RatScrew.Game</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gonzo_card_games.Templates.CardGameTemplate</span><span class="w"> </span><span class="kn">import</span> <span class="n">CardGameTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gonzo_card_games.CardDeck.CardDeck</span><span class="w"> </span><span class="kn">import</span> <span class="n">CardDeck</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gonzo_card_games.RatScrew.RoundCardStack</span><span class="w"> </span><span class="kn">import</span> <span class="n">RoundCardStack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gonzo_card_games.RatScrew.Player</span><span class="w"> </span><span class="kn">import</span> <span class="n">Player</span>
+
+
+<div class="viewcode-block" id="Game">
+<a class="viewcode-back" href="../../../gonzo_card_games.RatScrew.html#gonzo_card_games.RatScrew.Game">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Game</span><span class="p">(</span><span class="n">CardGameTemplate</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to run and manage gameplay state of Rat Screw card game</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_N_DECKS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">_MAX_CARDS</span> <span class="o">=</span> <span class="n">_N_DECKS</span> <span class="o">*</span> <span class="mi">52</span>
+    <span class="n">_MAX_PLAYERS</span> <span class="o">=</span> <span class="n">_MAX_CARDS</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize instance of Game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_game_title</span> <span class="o">=</span> <span class="s2">&quot;Rat Screw&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_game_parameters</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Game.reset_game_parameters">
+<a class="viewcode-back" href="../../../gonzo_card_games.RatScrew.html#gonzo_card_games.RatScrew.Game.reset_game_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_game_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets game parameters to initial/empty states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Parameters for tracking players</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_play_keys</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_players</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="c1"># Parameters for tracking game state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span> <span class="o">=</span> <span class="n">RoundCardStack</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_game_winner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_round_parameters</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_round_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets round parameters to initial states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_won_by_slap</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">game_winner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the index of the player who won the most recently completed game, or None if no winner yet.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_game_winner</span>
+
+    <span class="nd">@game_winner</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">game_winner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set game_winner to read-only&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;game_winner is a read-only attribute&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Game.print_rules">
+<a class="viewcode-back" href="../../../gonzo_card_games.RatScrew.html#gonzo_card_games.RatScrew.Game.print_rules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print rat screw game rules to screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rat Screw Game Rules:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;1. Objective of the game is to be the first player to collect all the cards. Each player starts with an equal number of cards in their stack.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;2. Each round players take turns playing cards from their stack to the center pile.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;3. If a face card is played, the next player must play another face card within a certain number of tries (Ace=4 tries, King=3 tries, Queen=2 tries, Jack=1 try).</span><span class="se">\n</span><span class="s2">   If they fail, the previous player wins the round and adds the center pile to their stack.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;4. Players can slap the pile when certain conditions are met to win the pile instantly.</span><span class="se">\n</span><span class="s2">   Conditions for slapping are if the last two cards match in value (i.e., double) or if the last card matches the card two before it in value (i.e., sandwich).&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. Each round starts with the player that won the previous round.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6. The game continues until one player has all the cards.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.print_controls">
+<a class="viewcode-back" href="../../../gonzo_card_games.RatScrew.html#gonzo_card_games.RatScrew.Game.print_controls">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print rat screw game controls to screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rat Screw Game Controls:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;1. At the start of the game each player chooses two unique action keys, a play key and a slap key.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. At any point of a round players can input any of their action keys.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;3. Once players have inputted action keys, hit &#39;enter&#39; to submit player actions for processing.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;4. A player&#39;s play key will only be processed if it&#39;s their turn to play and will only be processed once per action submission.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;5. The action keys for each player will be printed out at the start of each round, along with the current number of cards they have&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;6. At any given time the player whose turn it is will be indicated by the number next to the action input reciever (i.e., P#&gt;) &quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.play_game">
+<a class="viewcode-back" href="../../../gonzo_card_games.RatScrew.html#gonzo_card_games.RatScrew.Game.play_game">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">play_game</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Play rat screw game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting new rat screw game&quot;</span><span class="p">)</span>
+        <span class="c1"># Setup game for players</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_game</span><span class="p">()</span>
+        <span class="c1"># Play rounds until there is a winner for the game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_winner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_play_round</span><span class="p">(</span><span class="n">starting_player</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="p">)</span>
+            <span class="c1"># check if someone won after round</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_for_winner</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">game_winner</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> has won the game!&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ask_user_for_number_of_players</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ask user how many players will be part of game and validate input</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Integer representing number of players requested</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_players</span> <span class="o">=</span> <span class="s2">&quot;dummy&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">n_players</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
+            <span class="n">n_players</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;How many players are part of this game? &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_players</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MAX_PLAYERS</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_players</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of players must be between 2 and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_MAX_PLAYERS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask_user_for_number_of_players</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_players</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_game</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setup rat screw game with n_players playing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure that game parameters are at defaults</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_game_parameters</span><span class="p">()</span>
+        <span class="c1"># Get number of players for the game</span>
+        <span class="n">n_players</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask_user_for_number_of_players</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_players</span><span class="si">}</span><span class="s2"> players are part of this game&quot;</span><span class="p">)</span>
+        <span class="c1"># Create initial stack for each player</span>
+        <span class="n">fresh_deck</span> <span class="o">=</span> <span class="n">CardDeck</span><span class="p">(</span><span class="n">nDecks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_N_DECKS</span><span class="p">)</span>
+        <span class="n">initial_card_stacks</span> <span class="o">=</span> <span class="n">fresh_deck</span><span class="o">.</span><span class="n">deal_deck</span><span class="p">(</span><span class="n">nPiles</span><span class="o">=</span><span class="n">n_players</span><span class="p">)</span>
+        <span class="c1"># Move left over cards from fresh deck to round stack penalty stack</span>
+        <span class="k">while</span> <span class="n">fresh_deck</span><span class="o">.</span><span class="n">nCards</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">add_penalty_card</span><span class="p">(</span><span class="n">fresh_deck</span><span class="o">.</span><span class="n">deal_card</span><span class="p">())</span>
+        <span class="c1"># initialize each player with stack of cards and action keys assigned</span>
+        <span class="k">for</span> <span class="n">p_idx</span><span class="p">,</span> <span class="n">p_card_stack</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">initial_card_stacks</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up player #</span><span class="si">{</span><span class="n">p_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># intialize player</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span>
+                <span class="n">invalid_action_keys</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_play_keys</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="c1"># add action keys to dictionary to be able to reverse look up player index by their action keys</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_play_keys</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">play_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">slap_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_idx</span>
+            <span class="c1"># give player initial stack</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">card_stack</span> <span class="o">=</span> <span class="n">p_card_stack</span>
+            <span class="c1"># add player to game</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_play_round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">starting_player</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Play a single round of rat screw and update game state parameters</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        starting_player: int</span>
+<span class="sd">            Index of player to start round</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- New Round Starting ---&quot;</span><span class="p">)</span>
+        <span class="c1"># Show current card counts and controls for each player</span>
+        <span class="k">for</span> <span class="n">p_idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">p_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span><span class="si">}</span><span class="s2"> cards. Play key: &#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">play_key</span><span class="si">}</span><span class="s2">&#39;, Slap key: &#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">slap_key</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">starting_player</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> goes first.&quot;</span><span class="p">)</span>
+        <span class="n">previous_player</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">current_player</span> <span class="o">=</span> <span class="n">starting_player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_round_parameters</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Check to see if current player&#39;s turn is over</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span><span class="p">:</span>
+                <span class="n">previous_player</span> <span class="o">=</span> <span class="n">current_player</span>
+                <span class="n">current_player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_elgible_player</span><span class="p">(</span><span class="n">current_player</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">current_player</span> <span class="o">==</span> <span class="n">previous_player</span><span class="p">:</span>
+                    <span class="c1"># no other players have cards so current player wins the round (and game)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="n">current_player</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># await player action(s)</span>
+            <span class="n">player_actions</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P#</span><span class="si">{</span><span class="n">current_player</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&gt; &quot;</span><span class="p">)</span>
+
+            <span class="c1"># Process player actions and update game state</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_mid_round_actions</span><span class="p">(</span>
+                <span class="n">player_actions</span><span class="p">,</span> <span class="n">current_player</span><span class="p">,</span> <span class="n">previous_player</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Award round stack to round winner</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> has won the round!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_won_by_slap</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="p">]</span><span class="o">.</span><span class="n">take_round_stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use either action key to collect cards.&quot;</span><span class="p">)</span>
+            <span class="n">cards_collected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">cards_collected</span><span class="p">:</span>
+                <span class="n">player_actions</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P#</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&gt; &quot;</span><span class="p">)</span>
+                <span class="n">cards_collected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_round_end_actions</span><span class="p">(</span><span class="n">player_actions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_for_winner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update game_winner state based on if any player has collected all cards</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_game_winner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Iterate through players to see if anyone has all the cards</span>
+        <span class="k">for</span> <span class="n">p_idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MAX_CARDS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_game_winner</span> <span class="o">=</span> <span class="n">p_idx</span>
+                <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_next_elgible_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_player_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get index of next player who has cards to play</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        current_player_idx: int</span>
+<span class="sd">            Index of current player</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Index of next player with cards to play</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_players</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">)</span>
+        <span class="n">next_player_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">current_player_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_players</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">next_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">next_player_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">next_player_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_players</span>
+            <span class="k">if</span> <span class="n">next_player_idx</span> <span class="o">==</span> <span class="n">current_player_idx</span><span class="p">:</span>
+                <span class="c1"># No other players have cards</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">next_player_idx</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_mid_round_actions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">player_actions</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">current_player_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">previous_player_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update game state parameters based on player actions during an active round</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        player_actions: str</span>
+<span class="sd">            String of player actions input</span>
+<span class="sd">        current_player_idx: int</span>
+<span class="sd">            Index of current player</span>
+<span class="sd">        previous_player_idx: int</span>
+<span class="sd">            Index of previous player</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">play_once_checker</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># Iterate through player actions</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">player_actions</span><span class="p">:</span>
+            <span class="c1"># Ensure each key is only processed once per turn</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">play_once_checker</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">play_once_checker</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="c1"># Process action if key matches play or slap keys</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">key</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">current_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">play_key</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_process_mid_round_playing_card</span><span class="p">(</span>
+                    <span class="n">current_player_idx</span><span class="p">,</span> <span class="n">previous_player_idx</span>
+                <span class="p">)</span>
+                <span class="c1"># Stop processing other player actions since card has been played</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="p">:</span>
+                <span class="n">slapping_player_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_process_mid_round_slapping</span><span class="p">(</span>
+                    <span class="n">slapping_player_idx</span><span class="p">,</span> <span class="n">current_player_idx</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_mid_round_playing_card</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">current_player_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">previous_player_idx</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update game state parameters based on current player of active round playing card to round stack</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        current_player_idx: int</span>
+<span class="sd">            Index of current player</span>
+<span class="sd">        previous_player_idx: int</span>
+<span class="sd">            Index of previous player</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Play a card from player&#39;s stack</span>
+        <span class="n">played_card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">current_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">play_card</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">add_played_card</span><span class="p">(</span><span class="n">played_card</span><span class="p">)</span>
+        <span class="c1"># Print card to screen</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">played_card</span><span class="p">)</span>
+        <span class="c1"># Determine if player&#39;s turn is over (satisfied current face card requirement)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">played_card</span><span class="o">.</span><span class="n">isFaceCard</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">need_face_card</span> <span class="ow">is</span> <span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="c1"># Check if round was been won</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">has_stack_been_won</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">current_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="n">previous_player_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_mid_round_slapping</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">slapping_player_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_player_idx</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update game state parameters based on player slapping round stack during an active round</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        slapping_player_idx: int</span>
+<span class="sd">            Index of player who slapped the stack</span>
+<span class="sd">        current_player_idx: int</span>
+<span class="sd">            Index of current player</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if slap is valid and round was won</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">is_valid_slap</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">slapping_player_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> made a valid slap!&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="n">slapping_player_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_won_by_slap</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span>
+        <span class="c1"># Process an invalid slap</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">slapping_player_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> made an invalid slap!&quot;</span><span class="p">)</span>
+        <span class="c1"># If slapper has no cards, they cannot pay penalty</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">slapping_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># Provide penalty card for invalid slap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">add_penalty_card</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">slapping_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">play_card</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="c1"># If currrent player check that they still have cards after penalty</span>
+        <span class="k">if</span> <span class="n">slapping_player_idx</span> <span class="o">==</span> <span class="n">current_player_idx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_player_turn_over</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">current_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">card_stack</span><span class="o">.</span><span class="n">nCards</span> <span class="o">&lt;</span> <span class="mi">1</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_round_end_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player_actions</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update game state parameters based on actions at the end of round</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        player_actions: str</span>
+<span class="sd">            String of player actions input</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Boolean indicating if round stack was collected by someone</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stack_collected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">round_winner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="p">]</span>
+        <span class="n">play_once_checker</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># Iterate through player actions</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">player_actions</span><span class="p">:</span>
+            <span class="c1"># Ensure each key is only processed once per turn</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">play_once_checker</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">play_once_checker</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="c1"># Process round winner collecting round stack or other players slapping the stack</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">round_winner</span><span class="o">.</span><span class="n">play_key</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="n">round_winner</span><span class="o">.</span><span class="n">slap_key</span><span class="p">:</span>
+                <span class="c1"># round winner collected round stack so stop processing</span>
+                <span class="n">stack_collected</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="p">:</span>
+                <span class="c1"># Process a slap</span>
+                <span class="n">slapping_player_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slap_keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">is_valid_slap</span><span class="p">():</span>
+                    <span class="c1"># Stole round stack with a valid slap</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">slapping_player_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> made a valid slap!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span> <span class="o">=</span> <span class="n">slapping_player_idx</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_won_by_slap</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">stack_collected</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Penality slap</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player #</span><span class="si">{</span><span class="n">slapping_player_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> made an invalid slap!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="o">.</span><span class="n">add_penalty_card</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="n">slapping_player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">play_card</span><span class="p">()</span>
+                    <span class="p">)</span>
+        <span class="c1"># Give cards to round winner (either from pickup up cards or slapping stack)</span>
+        <span class="k">if</span> <span class="n">stack_collected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_winner</span><span class="p">]</span><span class="o">.</span><span class="n">take_round_stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_round_stack</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Alejandro (Gonzo) Gonzalez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
