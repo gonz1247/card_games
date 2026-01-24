@@ -70,18 +70,40 @@ class Card:
     def sameSuit(self, card2: "Card") -> bool:
         """
         Checks if two Card objects have the same suit.
+
+        Parameters
+        ----------
+        card2: Card
+            The other Card object to compare with.
+
+        Returns
+        ----------
+        Boolean indicating if both cards have the same suit.
         """
         return self.suit == card2.suit
 
     def sameValue(self, card2: "Card") -> bool:
         """
         Checks if two Card objects have the same value.
+
+        Parameters
+        ----------
+        card2: Card
+            The other Card object to compare with.
+
+        Returns
+        ----------
+        Boolean indicating if both cards have the same value.
         """
         return self.value == card2.value
 
     def isFaceCard(self) -> bool:
         """
         Checks if the card is a face card (jack, queen, king, ace).
+
+        Returns
+        -----------
+        Boolean indicating if the card is a face card or not.
         """
         return self.value in {"jack", "queen", "king", "ace"}
 

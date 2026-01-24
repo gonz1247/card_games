@@ -44,7 +44,7 @@ class Game(CardGameTemplate):
 
     @property
     def game_winner(self) -> int | None:
-        """Return game_winner directly"""
+        """Return the index of the player who won the most recently completed game, or None if no winner yet."""
         return self._game_winner
 
     @game_winner.setter

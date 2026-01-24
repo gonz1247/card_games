@@ -49,8 +49,13 @@ class CardDeck:
         """
         Deals a single card from the deck.
 
+        Parameters
+        ----------
+        fromBottom: bool, optional
+            If True, deals the card from the bottom of the deck; otherwise, deals from the top (default: False)
+
         Returns
-        -------
+        ----------
         Card object if available.
         """
         if len(self._cards) == 0:
@@ -123,7 +128,7 @@ class CardDeck:
 
         Returns
         ----------
-        Card object at the specified index.
+        Copy of card object at the specified index.
         """
         if index < 0 or index >= len(self._cards):
             raise IndexError("Card index out of range")
@@ -137,6 +142,8 @@ class CardDeck:
         ----------
         other_deck: CardDeck
             The CardDeck to be added to the current deck.
+        onTop: bool, optional
+            If True, adds the other deck on top of the current deck; otherwise, adds it to the bottom (default: False)
         """
         if isinstance(other_deck, CardDeck) is False:
             raise TypeError("Only CardDeck instances can be added to the deck")

@@ -32,7 +32,7 @@ class Player:
 
     @property
     def play_key(self) -> str:
-        """Return play_key value"""
+        """Return value of the key that player uses for playing cards"""
         return self._play_key
 
     @play_key.setter
@@ -42,7 +42,7 @@ class Player:
 
     @property
     def slap_key(self) -> str:
-        """Return slap_key value"""
+        """Return value of the key that player uses for slapping the card stack"""
         return self._slap_key
 
     @slap_key.setter
@@ -52,7 +52,7 @@ class Player:
 
     @property
     def card_stack(self) -> CardDeck:
-        """Return player's card_stack"""
+        """Return player's the players deck of cards"""
         return self._card_stack
 
     @card_stack.setter
@@ -68,7 +68,7 @@ class Player:
 
         Returns
         -------
-        Card played from player's card stack
+        Card to be played from the player's card stack
         """
         if self.card_stack.nCards < 1:
             raise IndexError("No cards left in player's card stack")
@@ -77,6 +77,11 @@ class Player:
     def take_round_stack(self, round_stack: RoundCardStack) -> None:
         """
         Remove cards from round stack and add it to player's card stack
+
+        Parameters
+        ----------
+        round_stack: RoundCardStack
+            The round stack that is being added to the player's card stack
         """
         if not isinstance(round_stack, RoundCardStack):
             raise TypeError(

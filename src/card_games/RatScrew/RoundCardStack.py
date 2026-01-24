@@ -30,7 +30,7 @@ class RoundCardStack:
 
     @property
     def played_card_stack(self) -> CardDeck:
-        """Return played_card_stack directly"""
+        """Return stack of cards that have been played to round stack"""
         return self._played_card_stack
 
     @played_card_stack.setter
@@ -40,7 +40,7 @@ class RoundCardStack:
 
     @property
     def penalty_card_stack(self) -> CardDeck:
-        """Return penalty_card_stack directly"""
+        """Return stack of cards that have been added to the penalty pile"""
         return self._penalty_card_stack
 
     @penalty_card_stack.setter
