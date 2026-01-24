@@ -6,7 +6,8 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import os, sys
+import sys
+import os
 
 sys.path.insert(0, os.path.abspath("../src"))
 
