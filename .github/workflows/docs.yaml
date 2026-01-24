@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - sphinx_upload_hot_fix
   workflow_dispatch:
 
 permissions:
