@@ -13,3 +13,9 @@ same API calls for getting a games rules, controls, and for initiating play.
 ## Installation
 
 ## Running locally with Docker
+
+This project can be ran locally using Docker if just interested in playing the currently available built-in card games and not creating new ones. To run locally with Docker you must have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
+
+1. Launch Docker Desktop on your machine
+2. Build the Docker image for card_games: `docker build -t card_games .`
+3. Launch the Docker container to play card games: `docker run --rm -it card_games`
