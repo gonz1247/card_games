@@ -15,6 +15,9 @@ manipulate/create individual playing cards and full card decks. The RatScrew mod
 Lastly, the Templates module was added to give a starting a point of adding new modules for other card games, where each card game module would have the 
 same API calls for getting a games rules, controls, and for initiating play.  
 
+Installation
+========================
+Coming soon...
 
 .. toctree::
    :maxdepth: 2
