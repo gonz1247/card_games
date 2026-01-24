@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 packages = ["src/card_games"]
 
 [project]
-name = "card-games"
+name = "gonzo_card_games"
 version = "1.0.0"
 requires-python = ">=3.10"
 authors = [
@@ -16,7 +16,7 @@ description = "Virtualization of card games with a standard deck"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-keywords = ["cards", "card", "card deck", "rat screw", "egyption rat screw", "egyption wrath"]
+keywords = ["cards", "card", "card deck", "rat screw", "egyption rat screw", "egyption wrath", "Gonzo"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python"
